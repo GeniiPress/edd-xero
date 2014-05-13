@@ -8,10 +8,6 @@ abstract class Xero_Resource {
 
 	}
 
-	public function push () {
-
-	}
-
 }
 
 ?>

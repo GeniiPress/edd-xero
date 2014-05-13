@@ -15,11 +15,15 @@ if( !defined( 'ABSPATH' ) )
 $path = trailingslashit( dirname( __FILE__ ) );
 
 // Ensure our class dependencies class has been defined
-if( !class_exists( 'Xero_Resource' ) )
-require_once( $path . 'lib/class.xero-resource.php' );
+$inits = array(
+	'Xero_Resource' => $path . 'lib/class.xero-resource.php',
+	'Xero_Contact' => $path . 'lib/class.xero-contact.php',
+	'Xero_Invoice' => $path . 'lib/class.xero-invoice.php',
+	'Xero_Line_Item' => $path . 'lib/class.xero-line-item.php'
+);
 
-if( !class_exists( 'Xero_Invoice' ) )
-require_once( $path . 'lib/class.xero-invoice.php' );
+foreach( $inits as $class => $file )
+	require_once $file;
 
 if( !class_exists( 'Plugify_EDD_Xero' ) )
 require_once( $path . 'class.edd-xero.php' );
