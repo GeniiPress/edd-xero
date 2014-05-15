@@ -7,6 +7,9 @@ class Xero_Line_Item extends Xero_Resource {
 	private $_description = '';
 	private $_quantity = 0;
 	private $_unitamount = 0;
+	private $_tax = 0;
+	private $_total = 0;
+
 	private $_accountcode = 200;
 
 	/**
@@ -24,6 +27,8 @@ class Xero_Line_Item extends Xero_Resource {
 			$this->_description = $initialize['description'];
 			$this->_quantity = $initialize['quantity'];
 			$this->_unitamount = $initialize['unitamount'];
+			$this->_tax = $initialize['tax'];
+			$this->_total = $initialize['total'];
 
 			return $this;
 
@@ -31,9 +36,43 @@ class Xero_Line_Item extends Xero_Resource {
 
 	}
 
-	public function get_description () { return $this->_description; }
-	public function get_quantity () { return $this->_quantity; }
-	public function get_unit_amount () { return $this->_unitamount; }
+	/**
+	* Generate and return XML for this Xero Line Item which will be sent to the Xero API
+	*
+	* @since 0.1
+	*
+	* @return string Returns Line Item XML for use with the Xero API
+	*/
+	public function get_xml () {
+
+		// Initialize XML array
+		$_ = array();
+
+		// Open <LineItem> tag
+		$_[] = '<LineItem>';
+
+		// Description
+		$_[] = '<Description>' . $this->_description . '</Description>';
+
+		// Quantity
+		$_[] = '<Quantity>' . $this->_quantity . '</Quantity>';
+
+		// Unit amount (price)
+		$_[] = '<UnitAmount>' . $this->_unitamount . '</UnitAmount>';
+
+		// Line amount. Total cost of all of this item exclusive of tax
+		$_[] = '<LineAmount>' . round( $this->_unitamount * $this->_quantity ) . '</LineAmount>';
+
+		// Account code
+		$_[] = '<AccountCode>' . $this->_accountcode . '</UnitAmount>';
+
+		// Close <LineItem> tag
+		$_[] = '</LineItem>';
+
+		// Return as one XML string
+		return implode( '', $_ );
+
+	}
 
 }
 
