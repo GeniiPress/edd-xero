@@ -106,14 +106,16 @@ final class Plugify_EDD_Xero {
 			$XeroOAuth = new XeroOAuth( $xero_config );
 			$response = $XeroOAuth->request( 'PUT', $XeroOAuth->url( 'Invoices', 'core' ), array(), $xml );
 
-			echo $xml;
+			if( $response['code'] == 200 ) {
 
-			echo '<pre>' . print_r($response, true) . '</pre>';
-			wp_die();
+			}
+			else {
+				
+			}
 
 		}
 		catch( Exception $e ) {
-			echo '<pre>' . print_r($e, true) . '</pre>';
+			// Add note to order to say Xero Invoice generation was unsuccessful
 		}
 
 	}
