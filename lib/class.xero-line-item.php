@@ -64,7 +64,7 @@ class Xero_Line_Item extends Xero_Resource {
 		$_[] = '<LineAmount>' . round( $this->_unitamount * $this->_quantity ) . '</LineAmount>';
 
 		// Account code
-		$_[] = '<AccountCode>' . $this->_accountcode . '</UnitAmount>';
+		$_[] = '<AccountCode>' . $this->_accountcode . '</AccountCode>';
 
 		// Close <LineItem> tag
 		$_[] = '</LineItem>';
