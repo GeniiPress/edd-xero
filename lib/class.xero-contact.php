@@ -88,13 +88,7 @@ class Xero_Contact extends Xero_Resource {
 		$_[] = '<Contact>';
 
 		// Set first name and last name
-		if( !is_null( $this->_first_name ) && !is_null( $this->_last_name ) ) {
-			$_[] = '<FirstName>' . $this->_first_name . '</FirstName>';
-			$_[] = '<LastName>' . $this->_last_name . '</LastName>';
-		}
-		else {
-			$_[] = '<Name>' . trim( $this->_first_name . ' ' . $this->_last_name ) . '</Name>';
-		}
+		$_[] = '<Name>' . trim( $this->_first_name . ' ' . $this->_last_name ) . '</Name>';
 
 		// Set email address
 		$_[] = '<EmailAddress>' . $this->_email . '</EmailAddress>';
