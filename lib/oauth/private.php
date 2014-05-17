@@ -7,11 +7,11 @@ define ( "OAUTH_CALLBACK", "oob" );
 $useragent = "XeroOAuth-PHP Private App Test";
 
 $signatures = array (
-		'consumer_key' => 'YOURCONSUMERKEY',
-		'shared_secret' => 'YOURSECRET',
+		'consumer_key' => 'MWWD3AUAJLWHSEIBSSUBTATYCISIET',
+		'shared_secret' => 'ZU6OUTLJWXUCLHH8UFTBUBQMTUEFNO',
 		// API versions
 		'core_version' => '2.0',
-		'payroll_version' => '1.0' 
+		'payroll_version' => '1.0'
 );
 
 if (XRO_APP_TYPE == "Private" || XRO_APP_TYPE == "Partner") {
@@ -22,7 +22,7 @@ if (XRO_APP_TYPE == "Private" || XRO_APP_TYPE == "Partner") {
 $XeroOAuth = new XeroOAuth ( array_merge ( array (
 		'application_type' => XRO_APP_TYPE,
 		'oauth_callback' => OAUTH_CALLBACK,
-		'user_agent' => $useragent 
+		'user_agent' => $useragent
 ), $signatures ) );
 include 'tests/testRunner.php';
 
@@ -37,16 +37,16 @@ if ($checkErrors > 0) {
 	$session = persistSession ( array (
 			'oauth_token' => $XeroOAuth->config ['consumer_key'],
 			'oauth_token_secret' => $XeroOAuth->config ['shared_secret'],
-			'oauth_session_handle' => '' 
+			'oauth_session_handle' => ''
 	) );
 	$oauthSession = retrieveSession ();
-	
+
 	if (isset ( $oauthSession ['oauth_token'] )) {
 		$XeroOAuth->config ['access_token'] = $oauthSession ['oauth_token'];
 		$XeroOAuth->config ['access_token_secret'] = $oauthSession ['oauth_token_secret'];
-		
+
 		include 'tests/tests.php';
 	}
-	
+
 	testLinks ();
 }

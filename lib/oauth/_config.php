@@ -26,7 +26,7 @@ $useragent = "";
 /**
  * Set your callback url or set 'oob' if none required
  */
-define("OAUTH_CALLBACK",     'http://localhost/XeroOAuth-PHP/example.php');
+define("OAUTH_CALLBACK",     'oob');
 
 /**
  * Application specific settings
@@ -44,6 +44,11 @@ $signatures = array(
     'core_version'=> '2.0',
     'payroll_version'=> '1.0',
 );
+
+if (XRO_APP_TYPE=="Private") {
+  $signatures['access_token'] = $signatures['consumer_key'];
+  $signatures['access_token_secret'] = $signatures['shared_secret'];
+}
 
 if (XRO_APP_TYPE=="Private"||XRO_APP_TYPE=="Partner") {
     $signatures['rsa_private_key']= BASE_PATH . '/certs/privatekey.pem';

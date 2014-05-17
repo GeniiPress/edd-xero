@@ -81,78 +81,40 @@ final class Plugify_EDD_Xero {
 
 		// Prepare payload and API endpoint URL
 		$xml = $invoice->get_xml();
-		$api = 'https://api.xero.com/api.xro/2.0/invoices';
 
-		$payload = array(
-			'xml' => rawurlencode( $xml )
-		);
+		// Create oAuth object and send request
+		try {
 
-		// Build OAuth related data. Xero application should be private, so the consumer secret and key should be identical to the
-		// access token and secret
-		$consumer_key = 'MWWD3AUAJLWHSEIBSSUBTATYCISIET';
-		$shared_secret = 'ZU6OUTLJWXUCLHH8UFTBUBQMTUEFNO';
+			$path = trailingslashit( dirname( __FILE__ ) );
 
-		$composite_key = sprintf( '%s&%s', rawurlencode( $consumer_key ), rawurlencode( $consumer_key ) );
-		$signature_hash = hash_hmac( 'sha1', $this->build_encoded_base_string( $api, $payload, 'POST' ), $composite_key, true );
+			require_once $path . 'lib/oauth/_config.php';
+			require_once $path . 'lib/oauth/lib/OAuthSimple.php';
+			require_once $path . 'lib/oauth/lib/XeroOAuth.php';
 
-		$oauth = array(
-			'oauth_consumer_key' => $consumer_key,
-			'oauth_shared_secret' => $shared_secret,
-			'oauth_signature_method' => 'RSA-SHA1',
-			'oauth_signature' => base64_encode( $signature_hash ),
-			'oauth_token' => $consumer_key,
-			'oauth_nonce' => md5( microtime() ),
-			'oauth_timestamp' => time(),
-			'oauth_version' => '1.0'
-		);
+			$xero_config = array_merge (
 
-		echo '<pre>' . print_r( $oauth, true ) . '</pre>';
+				array(
+					'application_type' => XRO_APP_TYPE,
+					'oauth_callback' => OAUTH_CALLBACK,
+					'user_agent' => 'Plugify-EDD-Xero'
+				),
 
-		// Send invoice to Xero
-		$args = array(
-			'method' => 'POST',
-			'timeout' => 45,
-			'httpversion' => '1.1',
-			'headers' => array(
-				'Authorization' => $this->build_oauth_header( $oauth )
-			),
-			'body' => $payload
-		);
+				$signatures
 
-		$response = wp_remote_post( $api, $args );
+			);
 
-		echo '<pre>' . print_r( $response, true ) . '</pre>';
+			$XeroOAuth = new XeroOAuth( $xero_config );
+			$response = $XeroOAuth->request( 'PUT', $XeroOAuth->url( 'Invoices', 'core' ), array(), $xml );
 
-		wp_die();
+			echo $xml;
 
-	}
+			echo '<pre>' . print_r($response, true) . '</pre>';
+			wp_die();
 
-	private function build_encoded_base_string ( $uri, $query, $method = 'POST' ) {
-
-		$base_string = array();
-
-		ksort( $query );
-
-		foreach( $query as $key => $value ) {
-			$base_string[] = sprintf( '%s=%s', $key, $value );
 		}
-
-		return sprintf( '%s&%s&%s', $method, rawurlencode( $uri ), rawurlencode( implode( '&', $base_string ) ) );
-
-	}
-
-	private function build_oauth_header ( $oauth ) {
-
-		if( !is_array( $oauth ) )
-			return false;
-
-		$header = array();
-
-		foreach( $oauth as $key => $value ) {
-			$header[] = "$key=\"" . rawurlencode( $value ) . "\"";
+		catch( Exception $e ) {
+			echo '<pre>' . print_r($e, true) . '</pre>';
 		}
-
-		return 'OAuth ' . implode( ', ', $header );
 
 	}
 
