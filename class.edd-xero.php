@@ -15,6 +15,24 @@ final class Plugify_EDD_Xero {
 		// Hook in to created payments
 		add_action( 'edd_complete_purchase', array( &$this, 'create_invoice' ) );
 
+		// Setup actions for invoice creation success/fail
+		add_action( 'edd_xero_invoice_creation_success', array( &$this, 'xero_invoice_success' ), 10, 3 );
+		add_action( 'edd_xero_invoice_creation_fail', array( &$this, 'xero_invoice_fail' ), 10, 2 );
+
+	}
+
+	public static function xero_invoice_success ( $invoice, $invoice_number, $payment_id ) {
+
+		// Insert a note on the payment informing the merchant Xero invoice generation was successful
+		edd_insert_payment_note( $payment_id, 'Xero invoice ' . $invoice_number . ' successfully created' );
+
+	}
+
+	public static function xero_invoice_fail ( $invoice, $payment_id ) {
+
+		// Insert a note on the payment informing merchant that Xero invoice generation failed
+		edd_insert_payment_note( $payment_id, 'Xero invoice could not be created. Error number: ' . $response->ErrorNumber );
+
 	}
 
 	/**
@@ -73,7 +91,7 @@ final class Plugify_EDD_Xero {
 
 	}
 
-	private function post_invoice ( $invoice, $payment_id = null ) {
+	private function post_invoice ( $invoice, $payment_id ) {
 
 		// Abort if a Xero_Invoice object was not passed
 		if( !( $invoice instanceof Xero_Invoice ) )
@@ -109,22 +127,12 @@ final class Plugify_EDD_Xero {
 			$request = $XeroOAuth->request( 'PUT', $XeroOAuth->url( 'Invoices', 'core' ), array(), $xml );
 			$response = $XeroOAuth->parseResponse( $request['response'] ,'xml' );
 
-			echo '<pre>' . print_r( $response, true ) . '</pre>';
-
-			// Parse the response from Xero, adding meta to the order where pertinent, such as the newly generated invoice number
+			// Parse the response from Xero and fire appropriate actions
 			if( $request['code'] == 200 ) {
-
-				// Insert a note on the payment informing the merchant Xero invoice generation was successful
-				edd_insert_payment_note( $payment_id, 'Xero invoice ' . $response->Invoices->Invoice->InvoiceNumber . ' successfully created' );
-
+				do_action( 'edd_xero_invoice_creation_success', $invoice, $response->Invoices->Invoice->InvoiceNumber, $payment_id );
 			}
 			else {
-
-				// Insert a note on the payment informing merchant that Xero invoice generation failed
-				if( $payment_id != null ) {
-					edd_insert_payment_note( $payment_id, 'Xero invoice could not be created. Error number: ' . $response->ErrorNumber );
-				}
-
+				do_action( 'edd_xero_invoice_creation_fail', $invoice, $payment_id );
 			}
 
 		}
