@@ -103,14 +103,16 @@ final class Plugify_EDD_Xero {
 
 			);
 
+			// Create object and send to Xero
 			$XeroOAuth = new XeroOAuth( $xero_config );
 			$response = $XeroOAuth->request( 'PUT', $XeroOAuth->url( 'Invoices', 'core' ), array(), $xml );
 
+			// Parse the response from Xero, adding meta to the order where pertinent, such as the newly generated invoice number
 			if( $response['code'] == 200 ) {
-
+				
 			}
 			else {
-				
+
 			}
 
 		}
