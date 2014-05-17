@@ -69,11 +69,11 @@ final class Plugify_EDD_Xero {
 			return false;
 		}
 
-		$this->post_invoice( $invoice );
+		$this->post_invoice( $invoice, $payment_id );
 
 	}
 
-	private function post_invoice ( $invoice ) {
+	private function post_invoice ( $invoice, $payment_id = null ) {
 
 		// Abort if a Xero_Invoice object was not passed
 		if( !( $invoice instanceof Xero_Invoice ) )
@@ -105,13 +105,25 @@ final class Plugify_EDD_Xero {
 
 			// Create object and send to Xero
 			$XeroOAuth = new XeroOAuth( $xero_config );
-			$response = $XeroOAuth->request( 'PUT', $XeroOAuth->url( 'Invoices', 'core' ), array(), $xml );
+
+			$request = $XeroOAuth->request( 'PUT', $XeroOAuth->url( 'Invoices', 'core' ), array(), $xml );
+			$response = $XeroOAuth->parseResponse( $request['response'] ,'xml' );
+
+			echo '<pre>' . print_r( $response, true ) . '</pre>';
 
 			// Parse the response from Xero, adding meta to the order where pertinent, such as the newly generated invoice number
-			if( $response['code'] == 200 ) {
-				
+			if( $request['code'] == 200 ) {
+
+				// Insert a note on the payment informing the merchant Xero invoice generation was successful
+				edd_insert_payment_note( $payment_id, 'Xero invoice ' . $response->Invoices->Invoice->InvoiceNumber . ' successfully created' );
+
 			}
 			else {
+
+				// Insert a note on the payment informing merchant that Xero invoice generation failed
+				if( $payment_id != null ) {
+					edd_insert_payment_note( $payment_id, 'Xero invoice could not be created. Error number: ' . $response->ErrorNumber );
+				}
 
 			}
 
