@@ -19,6 +19,9 @@ final class Plugify_EDD_Xero {
 		add_action( 'edd_xero_invoice_creation_success', array( &$this, 'xero_invoice_success' ), 10, 3 );
 		add_action( 'edd_xero_invoice_creation_fail', array( &$this, 'xero_invoice_fail' ), 10, 2 );
 
+		// Action for displaying Xero 'metabox' on payment details page
+		add_action( 'edd_view_order_details_sidebar_after', array( &$this, 'xero_invoice_metabox' ) );
+
 	}
 
 	public static function xero_invoice_success ( $invoice, $invoice_number, $payment_id ) {
@@ -33,6 +36,18 @@ final class Plugify_EDD_Xero {
 		// Insert a note on the payment informing merchant that Xero invoice generation failed
 		edd_insert_payment_note( $payment_id, 'Xero invoice could not be created. Error number: ' . $response->ErrorNumber );
 
+	}
+
+	public static function xero_invoice_metabox () {
+		?>
+
+		<div id="edd-order-update" class="postbox edd-order-data">
+			<h3 class="hndle">
+				<span><img src="<?php echo plugins_url( 'edd-xero/assets/art/xero-logo@2x.png' , dirname(__FILE__) ); ?>" width="12" height="12" style="position:relative;top:1px;" />&nbsp; Xero</span>
+			</h3>
+		</div>
+
+		<?php
 	}
 
 	/**
