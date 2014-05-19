@@ -29,6 +29,9 @@ final class Plugify_EDD_Xero {
 		// Insert a note on the payment informing the merchant Xero invoice generation was successful
 		edd_insert_payment_note( $payment_id, 'Xero invoice ' . $invoice_number . ' successfully created' );
 
+		// Save invoice ID locally (refactor this later)
+		update_post_meta( $payment_id, '_edd_payment_xero_invoice_number', $invoice_number );
+
 	}
 
 	public static function xero_invoice_fail ( $invoice, $payment_id ) {
