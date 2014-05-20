@@ -24,6 +24,9 @@ final class Plugify_EDD_Xero {
 		// Action for displaying Xero 'metabox' on payment details page
 		add_action( 'edd_view_order_details_sidebar_after', array( &$this, 'xero_invoice_metabox' ) );
 
+		// Admin hooks
+		add_action( 'admin_init', array( &$this, 'admin_init' ) );
+
 		// Load Xero PHP library
 		$path = trailingslashit( dirname( __FILE__ ) );
 
@@ -42,6 +45,13 @@ final class Plugify_EDD_Xero {
 			$signatures
 
 		);
+
+	}
+
+	public function admin_init () {
+
+		// Admin AJAX hooks
+		add_action( 'wp_ajax_invoice_lookup', array( &$this, 'ajax_xero_invoice_lookup' ) );
 
 	}
 
@@ -68,24 +78,68 @@ final class Plugify_EDD_Xero {
 
 		?>
 
-		<div id="edd-order-update" class="postbox edd-order-data">
+		<link rel="stylesheet" media="all" href="<?php echo plugins_url( 'edd-xero/assets/css/styles.css', dirname( __FILE__ ) ); ?>" />
+
+		<div id="edd-xero" class="postbox edd-order-data">
 			<h3 class="hndle">
 				<span><img src="<?php echo plugins_url( 'edd-xero/assets/art/xero-logo@2x.png' , dirname(__FILE__) ); ?>" width="12" height="12" style="position:relative;top:1px;" />&nbsp; Xero</span>
 			</h3>
 			<div class="inside">
 				<div class="edd-admin-box">
 					<div class="edd-admin-box-inside">
+
 						<?php if( '' != $invoice_number ): ?>
 
-						<?php $this->get_invoice( $invoice_number ); ?>
+						<h3><?php echo $invoice_number; ?></h3>
 
+						<div id="edd_xero_invoice_details">
+							<p class="ajax-loader">
+								<img src="<?php echo plugins_url( 'edd-xero/assets/art/ajax-loader.gif', dirname( __FILE__ ) ); ?>" alt="Loading" />
+							</p>
+							<input id="_edd_xero_invoice_number" type="hidden" name="edd_xero_invoice_number" value="<?php echo $invoice_number; ?>" />
+						</div>
+
+						<?php else: ?>
+						<h3>Invoice creation failed</h3>
 						<?php endif; ?>
+
 					</div>
 				</div>
 			</div>
 		</div>
 
+		<script src="<?php echo plugins_url( 'edd-xero/assets/js/functions.js', dirname( __FILE__ ) ); ?>"></script>
+
 		<?php
+	}
+
+	public function ajax_xero_invoice_lookup () {
+
+		if( !$_REQUEST['invoice_number'] ) {
+			wp_send_json_error();
+		}
+
+		if( $response = $this->get_invoice( $_REQUEST['invoice_number'] ) ) {
+
+			$return = array();
+
+			foreach( $response->Invoices as $invoice_tag ) {
+				$return['ID'] = (string)$invoice_tag->Invoice->InvoiceID;
+				$return['CurrencyCode'] = (string)$invoice_tag->Invoice->CurrencyCode;
+				$return['Total'] = (string)$invoice_tag->Invoice->Total;
+				$return['TotalTax'] = (string)$invoice_tag->Invoice->TotalTax;
+				$return['Status'] = (string)$invoice_tag->Invoice->Status;
+			}
+
+			$return['Contact']['Name'] = (string)$invoice_tag->Invoice->Contact->Name;
+			$return['Contact']['Email'] = (string)$invoice_tag->Invoice->Contact->EmailAddress;
+
+			wp_send_json_success( $return );
+
+		}
+
+		wp_send_json_error();
+
 	}
 
 	/**
