@@ -31,7 +31,8 @@ jQuery( function($) {
 
 					markup += '</p>';
 
-					$('#edd_xero_invoice_details').empty().hide().append(markup).fadeIn(150);
+					$('#edd_xero_invoice_details').empty().hide().append(markup);
+					$('#edd_xero_invoice_details, #edd-xero .edd-invoice-actions').fadeIn(400);
 
 				}
 

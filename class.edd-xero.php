@@ -18,7 +18,7 @@ final class Plugify_EDD_Xero {
 		add_action( 'edd_complete_purchase', array( &$this, 'create_invoice' ) );
 
 		// Setup actions for invoice creation success/fail
-		add_action( 'edd_xero_invoice_creation_success', array( &$this, 'xero_invoice_success' ), 99, 3 );
+		add_action( 'edd_xero_invoice_creation_success', array( &$this, 'xero_invoice_success' ), 99, 4 );
 		add_action( 'edd_xero_invoice_creation_fail', array( &$this, 'xero_invoice_fail' ), 10, 2 );
 
 		// Action for displaying Xero 'metabox' on payment details page
@@ -55,10 +55,11 @@ final class Plugify_EDD_Xero {
 
 	}
 
-	public static function xero_invoice_success ( $invoice, $invoice_number, $payment_id ) {
+	public static function xero_invoice_success ( $invoice, $invoice_number, $invoice_id, $payment_id ) {
 
-		// Save invoice ID locally (refactor this later)
+		// Save invoice number and ID locally
 		update_post_meta( $payment_id, '_edd_payment_xero_invoice_number', $invoice_number );
+		update_post_meta( $payment_id, '_edd_payment_xero_invoice_id', $invoice_id );
 
 		// Insert a note on the payment informing the merchant Xero invoice generation was successful
 		edd_insert_payment_note( $payment_id, 'Xero invoice ' . $invoice_number . ' successfully created' );
@@ -75,12 +76,14 @@ final class Plugify_EDD_Xero {
 	public function xero_invoice_metabox () {
 
 		$invoice_number = get_post_meta( $_GET['id'], '_edd_payment_xero_invoice_number', true );
+		$invoice_id = get_post_meta( $_GET['id'], '_edd_payment_xero_invoice_id', true );
 
 		?>
 
 		<link rel="stylesheet" media="all" href="<?php echo plugins_url( 'edd-xero/assets/css/styles.css', dirname( __FILE__ ) ); ?>" />
 
 		<div id="edd-xero" class="postbox edd-order-data">
+
 			<h3 class="hndle">
 				<span><img src="<?php echo plugins_url( 'edd-xero/assets/art/xero-logo@2x.png' , dirname(__FILE__) ); ?>" width="12" height="12" style="position:relative;top:1px;" />&nbsp; Xero</span>
 			</h3>
@@ -106,6 +109,16 @@ final class Plugify_EDD_Xero {
 					</div>
 				</div>
 			</div>
+
+			<div class="edd-order-update-box edd-admin-box edd-invoice-actions">
+		    <div class="major-publishing-actions">
+					<div class="publishing-action">
+						<a id="edd-view-invoice-in-xero" class="button-secondary right" target="_blank" href="https://go.xero.com/AccountsReceivable/Edit.aspx?InvoiceID=<?php echo $invoice_id; ?>">View in Xero</a>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</div>
+
 		</div>
 
 		<script src="<?php echo plugins_url( 'edd-xero/assets/js/functions.js', dirname( __FILE__ ) ); ?>"></script>
@@ -219,7 +232,7 @@ final class Plugify_EDD_Xero {
 
 			// Parse the response from Xero and fire appropriate actions
 			if( $request['code'] == 200 ) {
-				do_action( 'edd_xero_invoice_creation_success', $invoice, (string)$response->Invoices->Invoice->InvoiceNumber, $payment_id );
+				do_action( 'edd_xero_invoice_creation_success', $invoice, (string)$response->Invoices->Invoice->InvoiceNumber, (string)$response->Invoices->Invoice->InvoiceID, $payment_id );
 			}
 			else {
 				do_action( 'edd_xero_invoice_creation_fail', $invoice, $payment_id );
