@@ -13,7 +13,6 @@ jQuery( function($) {
 		// Show loading indicator and placeholder for content
 		invoice_content.show();
 
-		console.log(invoice_number);
 		// Throw an AJAX request back to lookup invoice from Xero API
 		$.ajax({
 			url: ajaxurl, // Piggyback off EDD var
@@ -62,7 +61,7 @@ jQuery( function($) {
 
 			// Hide the generate invoice button
 			button.hide();
-			
+
 		}
 
 	});
