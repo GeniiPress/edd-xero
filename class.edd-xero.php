@@ -140,11 +140,11 @@ final class Plugify_EDD_Xero {
 			return false;
 		}
 
-		$this->post_invoice( $invoice, $payment_id );
+		$this->put_invoice( $invoice, $payment_id );
 
 	}
 
-	private function post_invoice ( $invoice, $payment_id ) {
+	private function put_invoice ( $invoice, $payment_id ) {
 
 		// Abort if a Xero_Invoice object was not passed
 		if( !( $invoice instanceof Xero_Invoice ) )
