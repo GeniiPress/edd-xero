@@ -103,7 +103,7 @@ final class Plugify_EDD_Xero {
 						</div>
 
 						<?php else: ?>
-						<h3>Invoice creation failed</h3>
+						<h3>No associated invoice found</h3>
 						<?php endif; ?>
 
 					</div>
