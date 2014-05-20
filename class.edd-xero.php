@@ -16,7 +16,7 @@ final class Plugify_EDD_Xero {
 		add_action( 'edd_complete_purchase', array( &$this, 'create_invoice' ) );
 
 		// Setup actions for invoice creation success/fail
-		add_action( 'edd_xero_invoice_creation_success', array( &$this, 'xero_invoice_success' ), 10, 3 );
+		add_action( 'edd_xero_invoice_creation_success', array( &$this, 'xero_invoice_success' ), 99, 3 );
 		add_action( 'edd_xero_invoice_creation_fail', array( &$this, 'xero_invoice_fail' ), 10, 2 );
 
 		// Action for displaying Xero 'metabox' on payment details page
@@ -26,11 +26,11 @@ final class Plugify_EDD_Xero {
 
 	public static function xero_invoice_success ( $invoice, $invoice_number, $payment_id ) {
 
-		// Insert a note on the payment informing the merchant Xero invoice generation was successful
-		edd_insert_payment_note( $payment_id, 'Xero invoice ' . $invoice_number . ' successfully created' );
-
 		// Save invoice ID locally (refactor this later)
 		update_post_meta( $payment_id, '_edd_payment_xero_invoice_number', $invoice_number );
+
+		// Insert a note on the payment informing the merchant Xero invoice generation was successful
+		edd_insert_payment_note( $payment_id, 'Xero invoice ' . $invoice_number . ' successfully created' );
 
 	}
 
@@ -147,7 +147,7 @@ final class Plugify_EDD_Xero {
 
 			// Parse the response from Xero and fire appropriate actions
 			if( $request['code'] == 200 ) {
-				do_action( 'edd_xero_invoice_creation_success', $invoice, $response->Invoices->Invoice->InvoiceNumber, $payment_id );
+				do_action( 'edd_xero_invoice_creation_success', $invoice, (string)$response->Invoices->Invoice->InvoiceNumber, $payment_id );
 			}
 			else {
 				do_action( 'edd_xero_invoice_creation_fail', $invoice, $payment_id );
@@ -155,7 +155,7 @@ final class Plugify_EDD_Xero {
 
 		}
 		catch( Exception $e ) {
-			// Add note to order to say Xero Invoice generation was unsuccessful
+			do_action( 'edd_xero_invoice_creation_fail', $invoice, $payment_id );
 		}
 
 	}
