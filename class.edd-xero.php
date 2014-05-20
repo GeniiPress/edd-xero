@@ -135,12 +135,13 @@ final class Plugify_EDD_Xero {
 
 			}
 
+			// Send the invoie to Xero
+			$this->put_invoice( $invoice, $payment_id );
+
 		}
 		catch( Exception $e ) {
 			return false;
 		}
-
-		$this->put_invoice( $invoice, $payment_id );
 
 	}
 
