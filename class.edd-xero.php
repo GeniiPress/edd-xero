@@ -95,16 +95,17 @@ final class Plugify_EDD_Xero {
 
 						<h3><?php echo $invoice_number; ?></h3>
 
+						<?php else: ?>
+						<h3 class="text-center">No associated invoice found</h3>
+						<a id="edd-xero-generate-invoice" class="button-primary text-center" href="#">Generate Invoice Now</a>
+						<?php endif; ?>
+
 						<div id="edd_xero_invoice_details">
 							<p class="ajax-loader">
 								<img src="<?php echo plugins_url( 'edd-xero/assets/art/ajax-loader.gif', dirname( __FILE__ ) ); ?>" alt="Loading" />
 							</p>
 							<input id="_edd_xero_invoice_number" type="hidden" name="edd_xero_invoice_number" value="<?php echo $invoice_number; ?>" />
 						</div>
-
-						<?php else: ?>
-						<h3>No associated invoice found</h3>
-						<?php endif; ?>
 
 					</div>
 				</div>

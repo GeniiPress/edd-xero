@@ -5,10 +5,15 @@
 jQuery( function($) {
 
 	var invoice_number = $('#_edd_xero_invoice_number').val();
+	var invoice_content = $('#edd_xero_invoice_details');
 
 	// If this payment has an invoice, display some deets
-	if(typeof invoice_number !== undefined) {
+	if(invoice_number !== '') {
 
+		// Show loading indicator and placeholder for content
+		invoice_content.show();
+
+		console.log(invoice_number);
 		// Throw an AJAX request back to lookup invoice from Xero API
 		$.ajax({
 			url: ajaxurl, // Piggyback off EDD var
@@ -40,5 +45,26 @@ jQuery( function($) {
 		});
 
 	}
+
+	// Invoice generation button
+	$('#edd-xero-generate-invoice').on('click', function(e) {
+
+		var button = $(this);
+
+		// Halt default browser event
+		e.preventDefault();
+
+		// Ensure user knows what they're doing
+		if( confirm( 'Are you SURE you want to generate a NEW invoice in Xero?' ) ) {
+
+			// Show loading indicator and placeholder for content
+			invoice_content.show();
+
+			// Hide the generate invoice button
+			button.hide();
+			
+		}
+
+	});
 
 });
