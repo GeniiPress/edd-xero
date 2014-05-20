@@ -4,6 +4,8 @@
 
 final class Plugify_EDD_Xero {
 
+	private $xero_config = array();
+
 	/**
 	* Class constructor. Hook in to EDD
 	*
@@ -21,6 +23,25 @@ final class Plugify_EDD_Xero {
 
 		// Action for displaying Xero 'metabox' on payment details page
 		add_action( 'edd_view_order_details_sidebar_after', array( &$this, 'xero_invoice_metabox' ) );
+
+		// Load Xero PHP library
+		$path = trailingslashit( dirname( __FILE__ ) );
+
+		require_once $path . 'lib/oauth/_config.php';
+		require_once $path . 'lib/oauth/lib/OAuthSimple.php';
+		require_once $path . 'lib/oauth/lib/XeroOAuth.php';
+
+		$this->xero_config = array_merge (
+
+			array(
+				'application_type' => XRO_APP_TYPE,
+				'oauth_callback' => OAUTH_CALLBACK,
+				'user_agent' => 'Plugify-EDD-Xero'
+			),
+
+			$signatures
+
+		);
 
 	}
 
@@ -41,13 +62,27 @@ final class Plugify_EDD_Xero {
 
 	}
 
-	public static function xero_invoice_metabox () {
+	public function xero_invoice_metabox () {
+
+		$invoice_number = get_post_meta( $_GET['id'], '_edd_payment_xero_invoice_number', true );
+
 		?>
 
 		<div id="edd-order-update" class="postbox edd-order-data">
 			<h3 class="hndle">
 				<span><img src="<?php echo plugins_url( 'edd-xero/assets/art/xero-logo@2x.png' , dirname(__FILE__) ); ?>" width="12" height="12" style="position:relative;top:1px;" />&nbsp; Xero</span>
 			</h3>
+			<div class="inside">
+				<div class="edd-admin-box">
+					<div class="edd-admin-box-inside">
+						<?php if( '' != $invoice_number ): ?>
+
+						<?php $this->get_invoice( $invoice_number ); ?>
+
+						<?php endif; ?>
+					</div>
+				</div>
+			</div>
 		</div>
 
 		<?php
@@ -121,26 +156,8 @@ final class Plugify_EDD_Xero {
 		// Create oAuth object and send request
 		try {
 
-			$path = trailingslashit( dirname( __FILE__ ) );
-
-			require_once $path . 'lib/oauth/_config.php';
-			require_once $path . 'lib/oauth/lib/OAuthSimple.php';
-			require_once $path . 'lib/oauth/lib/XeroOAuth.php';
-
-			$xero_config = array_merge (
-
-				array(
-					'application_type' => XRO_APP_TYPE,
-					'oauth_callback' => OAUTH_CALLBACK,
-					'user_agent' => 'Plugify-EDD-Xero'
-				),
-
-				$signatures
-
-			);
-
 			// Create object and send to Xero
-			$XeroOAuth = new XeroOAuth( $xero_config );
+			$XeroOAuth = new XeroOAuth( $this->xero_config );
 
 			$request = $XeroOAuth->request( 'PUT', $XeroOAuth->url( 'Invoices', 'core' ), array(), $xml );
 			$response = $XeroOAuth->parseResponse( $request['response'] ,'xml' );
@@ -156,6 +173,25 @@ final class Plugify_EDD_Xero {
 		}
 		catch( Exception $e ) {
 			do_action( 'edd_xero_invoice_creation_fail', $invoice, $payment_id );
+		}
+
+	}
+
+	private function get_invoice ( $invoice_number ) {
+
+		try {
+
+			// Get Invoice via Xero API
+			$XeroOAuth = new XeroOAuth( $this->xero_config );
+
+			$request = $XeroOAuth->request( 'GET', $XeroOAuth->url( 'Invoices/' . $invoice_number, 'core' ), array(), NULL );
+			$response = $XeroOAuth->parseResponse( $request['response'] ,'xml' );
+
+			return $response;
+
+		}
+		catch( Exception $e ) {
+			return false;
 		}
 
 	}
