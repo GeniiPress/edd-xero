@@ -52,6 +52,7 @@ final class Plugify_EDD_Xero {
 
 		// Admin AJAX hooks
 		add_action( 'wp_ajax_invoice_lookup', array( &$this, 'ajax_xero_invoice_lookup' ) );
+		add_action( 'wp_ajax_generate_invoice', array( &$this, 'ajax_generate_invoice' ) );
 
 	}
 
@@ -69,7 +70,7 @@ final class Plugify_EDD_Xero {
 	public static function xero_invoice_fail ( $invoice, $payment_id ) {
 
 		// Insert a note on the payment informing merchant that Xero invoice generation failed
-		edd_insert_payment_note( $payment_id, 'Xero invoice could not be created. Error number: ' . $response->ErrorNumber );
+		edd_insert_payment_note( $payment_id, 'Xero invoice could not be created.' );
 
 	}
 
@@ -93,10 +94,10 @@ final class Plugify_EDD_Xero {
 
 						<?php if( '' != $invoice_number ): ?>
 
-						<h3><?php echo $invoice_number; ?></h3>
+						<h3 class="invoice-number"><?php echo $invoice_number; ?></h3>
 
 						<?php else: ?>
-						<h3 class="text-center">No associated invoice found</h3>
+						<h3 class="invoice-number text-center">No associated invoice found</h3>
 						<a id="edd-xero-generate-invoice" class="button-primary text-center" href="#">Generate Invoice Now</a>
 						<?php endif; ?>
 
@@ -134,25 +135,47 @@ final class Plugify_EDD_Xero {
 		}
 
 		if( $response = $this->get_invoice( $_REQUEST['invoice_number'] ) ) {
-
-			$return = array();
-
-			foreach( $response->Invoices as $invoice_tag ) {
-				$return['ID'] = (string)$invoice_tag->Invoice->InvoiceID;
-				$return['CurrencyCode'] = (string)$invoice_tag->Invoice->CurrencyCode;
-				$return['Total'] = (string)$invoice_tag->Invoice->Total;
-				$return['TotalTax'] = (string)$invoice_tag->Invoice->TotalTax;
-				$return['Status'] = (string)$invoice_tag->Invoice->Status;
-			}
-
-			$return['Contact']['Name'] = (string)$invoice_tag->Invoice->Contact->Name;
-			$return['Contact']['Email'] = (string)$invoice_tag->Invoice->Contact->EmailAddress;
-
+			$return = $this->get_invoice_excerpt( $response );
 			wp_send_json_success( $return );
-
 		}
 
 		wp_send_json_error();
+
+	}
+
+	public function ajax_generate_invoice () {
+
+		if( !isset( $_REQUEST['payment_id'] ) ) {
+			wp_send_json_error();
+		}
+
+		if( $response = $this->create_invoice( $_REQUEST['payment_id'] ) ) {
+			$return = $this->get_invoice_excerpt( $response );
+			wp_send_json_success( $return );
+		}
+		else {
+			wp_send_json_error();
+		}
+
+	}
+
+	public function get_invoice_excerpt( $response ) {
+
+		$return = array();
+
+		foreach( $response->Invoices as $invoice_tag ) {
+			$return['ID'] = (string)$invoice_tag->Invoice->InvoiceID;
+			$return['InvoiceNumber'] = (String)$invoice_tag->Invoice->InvoiceNumber;
+			$return['CurrencyCode'] = (string)$invoice_tag->Invoice->CurrencyCode;
+			$return['Total'] = (string)$invoice_tag->Invoice->Total;
+			$return['TotalTax'] = (string)$invoice_tag->Invoice->TotalTax;
+			$return['Status'] = (string)$invoice_tag->Invoice->Status;
+		}
+
+		$return['Contact']['Name'] = (string)$invoice_tag->Invoice->Contact->Name;
+		$return['Contact']['Email'] = (string)$invoice_tag->Invoice->Contact->EmailAddress;
+
+		return $return;
 
 	}
 
@@ -204,7 +227,7 @@ final class Plugify_EDD_Xero {
 			}
 
 			// Send the invoie to Xero
-			$this->put_invoice( $invoice, $payment_id );
+			return $this->put_invoice( $invoice, $payment_id );
 
 		}
 		catch( Exception $e ) {
@@ -238,6 +261,8 @@ final class Plugify_EDD_Xero {
 			else {
 				do_action( 'edd_xero_invoice_creation_fail', $invoice, $payment_id );
 			}
+
+			return $response;
 
 		}
 		catch( Exception $e ) {
