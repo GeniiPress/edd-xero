@@ -27,6 +27,9 @@ final class Plugify_EDD_Xero {
 		// Admin hooks
 		add_action( 'admin_init', array( &$this, 'admin_init' ) );
 
+		// EDD filters which need to be leveraged
+		add_filter( 'edd_settings_tabs', array( &$this, 'edd_xero_settings' ), 10, 1 );
+
 		// Load Xero PHP library
 		$path = trailingslashit( dirname( __FILE__ ) );
 
@@ -66,7 +69,22 @@ final class Plugify_EDD_Xero {
 	}
 
 	/**
-	* Leverage the Xero invoice creation success access to save critical invoice data such as Number and ID as meta
+	* Add a 'Xero' tab to the EDD settings page. Leverages the 'edd_settings_tabs' filter
+	*
+	* @since 0.1
+	*
+	* @param array $tabs Array of tabs to be displayed on the EDD settings page
+	* @return array Returns updated array of tabs to be displayed on the EDD settings page
+	*/
+	public static function edd_xero_settings ( $tabs ) {
+
+		$tabs['xero'] = 'Xero';
+		return $tabs;
+
+	}
+
+	/**
+	* Leverage the Xero invoice creation success action to save critical invoice data such as Number and ID as meta
 	* against the EDD Payment whenever an invoice is generated
 	*
 	* @since 0.1
