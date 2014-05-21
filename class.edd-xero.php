@@ -48,6 +48,14 @@ final class Plugify_EDD_Xero {
 
 	}
 
+	/**
+	* Register hooks which are needed for the admin area, such as the 'Generate Invoice' button and automatically
+	* displaying invoice details in the metabox
+	*
+	* @since 0.1
+	*
+	* @return void
+	*/
 	public function admin_init () {
 
 		// Admin AJAX hooks
@@ -56,6 +64,18 @@ final class Plugify_EDD_Xero {
 
 	}
 
+	/**
+	* Leverage the Xero invoice creation success access to save critical invoice data such as Number and ID as meta
+	* against the EDD Payment whenever an invoice is generated
+	*
+	* @since 0.1
+	*
+	* @param Xero_Invoice $invoice Xero_Invoice object of newly generated invoice
+	* @param string $invoice_number Number of Xero invoice as automatically assigned by Xero. EG, "INV-123"
+	* @param guid $invoice_id Unique ID of invoice as in Xero. EG "851b2f09-36f8-4df8-a32e-da8c4c451ff0"
+	* @param int $payment_id ID of EDD Payment
+	* @return void
+	*/
 	public static function xero_invoice_success ( $invoice, $invoice_number, $invoice_id, $payment_id ) {
 
 		// Save invoice number and ID locally
@@ -67,6 +87,15 @@ final class Plugify_EDD_Xero {
 
 	}
 
+	/**
+	* Leverage the Xero invoice creation failure action to add an error note to the payment
+	*
+	* @since 0.1
+	*
+	* @param Xero_Invoice $invoice Xero_Invoice object of invoice which failed to generate in Xero
+	* @param int $payment_id ID of EDD Payment
+	* @return void
+	*/
 	public static function xero_invoice_fail ( $invoice, $payment_id ) {
 
 		// Insert a note on the payment informing merchant that Xero invoice generation failed
@@ -74,6 +103,13 @@ final class Plugify_EDD_Xero {
 
 	}
 
+	/**
+	* Handler to populate the Metabox found on the EDD Payment page in the backend
+	*
+	* @since 0.1
+	*
+	* @return void
+	*/
 	public function xero_invoice_metabox () {
 
 		$invoice_number = get_post_meta( $_GET['id'], '_edd_payment_xero_invoice_number', true );
@@ -128,6 +164,13 @@ final class Plugify_EDD_Xero {
 		<?php
 	}
 
+	/**
+	* AJAX handler to do an invoice lookup. Uses parameter "invoice_number"
+	*
+	* @since 0.1
+	*
+	* @return HTTP
+	*/
 	public function ajax_xero_invoice_lookup () {
 
 		if( !$_REQUEST['invoice_number'] ) {
@@ -143,6 +186,13 @@ final class Plugify_EDD_Xero {
 
 	}
 
+	/**
+	* AJAX handler to generate an invoice in Xero. Uses parameter "payment_id" which represents the EDD Payment
+	*
+	* @since 0.1
+	*
+	* @return HTTP
+	*/
 	public function ajax_generate_invoice () {
 
 		if( !isset( $_REQUEST['payment_id'] ) ) {
@@ -159,6 +209,14 @@ final class Plugify_EDD_Xero {
 
 	}
 
+	/**
+	* Generate an array containing a snapshot of a Xero invoice
+	*
+	* @since 0.1
+	*
+	* @param $response SimpleXMLObject An XML response for a particular invoice from Xero
+	* @return array
+	*/
 	public function get_invoice_excerpt( $response ) {
 
 		$return = array();
@@ -181,7 +239,7 @@ final class Plugify_EDD_Xero {
 
 	/**
 	* Handler for edd_complete_purchase hook. Fires when a purchase is completed
-	* When validated, create Xero resources and push to API as necessary
+	* Generates a Xero_Invoice object and then sends that object to the Xero API as XML for creation
 	*
 	* @since 0.1
 	*
@@ -236,6 +294,15 @@ final class Plugify_EDD_Xero {
 
 	}
 
+	/**
+	* Handler for sending an invoice creation request to Xero once all processing has been completed.
+	*
+	* @since 0.1
+	*
+	* @param Xero_Invoice $invoice Xero_Invoice object which the new invoice will be generated from
+	* @param int $payment_id ID of EDD payment on which to base the Xero invoice.
+	* @return SimpleXMLObject
+	*/
 	private function put_invoice ( $invoice, $payment_id ) {
 
 		// Abort if a Xero_Invoice object was not passed
@@ -271,6 +338,14 @@ final class Plugify_EDD_Xero {
 
 	}
 
+	/**
+	* Query the Xero API for a specific invoice by number (as opposed to the ID)
+	*
+	* @since 0.1
+	*
+	* @param int $invoice_number Automatically generated human friendly invoice number. EG "INV-123"
+	* @return SimpleXMLObject
+	*/
 	private function get_invoice ( $invoice_number ) {
 
 		try {

@@ -7,6 +7,7 @@ jQuery( function($) {
 	var invoice_number = $('#_edd_xero_invoice_number').val();
 	var invoice_content = $('#edd_xero_invoice_details');
 
+	// Common function for building a snapshot of an invoice to display in the metabox
 	get_invoice_excerpt = function (data) {
 
 		var markup = '<p>';
@@ -54,7 +55,7 @@ jQuery( function($) {
 
 	}
 
-	// Invoice generation button
+	// Invoice generation button handler
 	$('#edd-xero-generate-invoice').on('click', function(e) {
 
 		var button = $(this);
