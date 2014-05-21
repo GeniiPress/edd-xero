@@ -61,6 +61,7 @@ final class Plugify_EDD_Xero {
 		// Admin AJAX hooks
 		add_action( 'wp_ajax_invoice_lookup', array( &$this, 'ajax_xero_invoice_lookup' ) );
 		add_action( 'wp_ajax_generate_invoice', array( &$this, 'ajax_generate_invoice' ) );
+		add_action( 'wp_ajax_disassociate_invoice', array( &$this, 'ajax_disassociate_invoice' ) );
 
 	}
 
@@ -151,7 +152,8 @@ final class Plugify_EDD_Xero {
 			<div class="edd-order-update-box edd-admin-box edd-invoice-actions">
 		    <div class="major-publishing-actions">
 					<div class="publishing-action">
-						<a id="edd-view-invoice-in-xero" class="button-secondary right" target="_blank" href="https://go.xero.com/AccountsReceivable/Edit.aspx?InvoiceID=<?php echo $invoice_id; ?>">View in Xero</a>
+						<a id="edd-view-invoice-in-xero" class="button-primary right" target="_blank" href="https://go.xero.com/AccountsReceivable/Edit.aspx?InvoiceID=<?php echo $invoice_id; ?>">View in Xero</a>
+						<a id="edd-xero-disassociate-invoice" class="button-secondary right" href="#">Disassociate Invoice</a>
 					</div>
 					<div class="clear"></div>
 				</div>
@@ -202,6 +204,31 @@ final class Plugify_EDD_Xero {
 		if( $response = $this->create_invoice( $_REQUEST['payment_id'] ) ) {
 			$return = $this->get_invoice_excerpt( $response );
 			wp_send_json_success( $return );
+		}
+		else {
+			wp_send_json_error();
+		}
+
+	}
+
+	/**
+	* AJAX handler to disassociate the invoice attached to a payment. Uses parameter "payment_id" which represents the EDD Payment
+	*
+	* @since 0.1
+	*
+	* @return HTTP
+	*/
+	public function ajax_disassociate_invoice () {
+
+		if( !isset( $_REQUEST['payment_id'] ) ) {
+			wp_send_json_error();
+		}
+
+		$payment_id = $_REQUEST['payment_id'];
+		$result 		= delete_post_meta( $payment_id, '_edd_payment_xero_invoice_number' ) && delete_post_meta( $payment_id, '_edd_payment_xero_invoice_id' );
+
+		if( $result ) {
+			wp_send_json_success();
 		}
 		else {
 			wp_send_json_error();

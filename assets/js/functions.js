@@ -6,6 +6,7 @@ jQuery( function($) {
 
 	var invoice_number = $('#_edd_xero_invoice_number').val();
 	var invoice_content = $('#edd_xero_invoice_details');
+	var payment_id = $('input[name="edd_payment_id"]').val();
 
 	// Common function for building a snapshot of an invoice to display in the metabox
 	get_invoice_excerpt = function (data) {
@@ -66,9 +67,6 @@ jQuery( function($) {
 		// Ensure user knows what they're doing
 		if( confirm( 'Are you SURE you want to generate a NEW invoice in Xero?' ) ) {
 
-			// Get payment id
-			var payment_id = $('input[name="edd_payment_id"]').val();
-
 			if( payment_id <= 0 ) {
 				alert('There was a problem creating the invoice. Please refresh and try again.');
 				return false;
@@ -110,6 +108,54 @@ jQuery( function($) {
 				}
 			});
 
+
+		}
+
+	});
+
+	// Invoice disassociation button handler
+	$('#edd-xero-disassociate-invoice').on('click', function(e) {
+
+		var button = $(this);
+
+		// Halt browser
+		e.preventDefault();
+
+		// Make sure the user wants to do this
+		if( confirm( 'Are you SURE you want to disassociate this invoice from this payment? The invoice will NOT be changed in Xero' ) ) {
+
+			// Disassociate the invoice
+			$.ajax({
+				url: ajaxurl,
+				type: 'POST',
+				dataType: 'json',
+				data: {
+					action: 'disassociate_invoice',
+					payment_id: payment_id
+				},
+				beforeSend: function() {
+					button.text('Loading...');
+				},
+				success: function(result) {
+
+					if(result.success) {
+						$('#edd_xero_invoice_details, #edd-xero .edd-invoice-actions').fadeOut(200, function() {
+							$('#edd-xero h3.invoice-number').text('Invoice disassociated').addClass('text-center');
+						});
+					}
+					else {
+						button.text('Disassociate Invoice');
+						alert('There was a problem disassociating the invoice. Please try again.');
+					}
+
+					button.remove();
+
+				},
+				error: function() {
+					button.text('Disassociate Invoice');
+					alert('There was a problem disassociating the invoice. Please try again.');
+				}
+			});
 
 		}
 

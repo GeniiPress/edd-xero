@@ -42,6 +42,14 @@
 				line-height: 23px;
 			}
 
+				#edd-xero .major-publishing-actions .publishing-action .button-primary {
+
+				}
+
+				#edd-xero .major-publishing-actions .publishing-action .button-secondary {
+					margin-right: 10px;
+				}
+
 		#edd-xero .edd-invoice-actions {
 			display: none;
 		}
