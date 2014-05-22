@@ -7,7 +7,7 @@ final class Plugify_EDD_Xero {
 	private $xero_config = array();
 
 	/**
-	* Class constructor. Hook in to EDD
+	* Class constructor. Hook in to EDD, setup actions and everything we need.
 	*
 	* @since 0.1
 	* @return void
