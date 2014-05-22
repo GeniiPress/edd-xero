@@ -29,6 +29,7 @@ final class Plugify_EDD_Xero {
 
 		// EDD filters which need to be leveraged
 		add_filter( 'edd_settings_tabs', array( &$this, 'edd_xero_settings' ), 10, 1 );
+		add_filter( 'edd_settings_extensions', array( &$this, 'edd_xero_register_settings' ), 10, 1 );
 
 		// Load Xero PHP library
 		$path = trailingslashit( dirname( __FILE__ ) );
@@ -69,6 +70,54 @@ final class Plugify_EDD_Xero {
 	}
 
 	/**
+	* Register settings fields where the user can insert the consumer key, shared secret etc..
+	* Currently displays under the Extensions tab in EDD settings
+	*
+	* @since 0.1
+	*
+	* @return void
+	*/
+	public static function edd_xero_register_settings ( $edd_settings ) {
+
+		$img = '<img src="' . plugins_url( 'edd-xero/assets/art/xero-logo@2x.png' , dirname(__FILE__) ) . '" width="12" height="12" style="position:relative;top:1px;" />';
+
+		$settings = array(
+			'xero_settings_header' => array(
+				'id' => 'xero_settings_header',
+				'name' => __( "$img Xero Settings", 'edd-xero' ),
+				'type' => 'header'
+			),
+			'consumer_key' => array(
+				'id' => 'consumer_key',
+				'name' => __( 'Consumer Key', 'edd-xero' ),
+				'desc' => __( 'The consumer key of your Xero application.', 'edd-xero' ),
+				'type' => 'text'
+			),
+			'shared_secret' => array(
+				'id' => 'shared_secret',
+				'name' => __( 'Shared Secret', 'edd-xero' ),
+				'desc' => __( 'The shared secret of your Xero application.', 'edd-xero' ),
+				'type' => 'text'
+			),
+			'private_key' => array(
+				'id' => 'private_key',
+				'name' => __( 'Private Key', 'edd-xero' ),
+				'desc' => __( 'Private key file (.pem)', 'edd-xero' ),
+				'type' => 'upload'
+			),
+			'public_key' => array(
+				'id' => 'public_key',
+				'name' => __( 'Public Key', 'edd-xero' ),
+				'desc' => __( 'Public Key file (.cer)', 'edd-xero' ),
+				'type' => 'upload'
+			)
+		);
+
+		return array_merge( $edd_settings, $settings );
+
+	}
+
+	/**
 	* Add a 'Xero' tab to the EDD settings page. Leverages the 'edd_settings_tabs' filter
 	*
 	* @since 0.1
@@ -78,7 +127,7 @@ final class Plugify_EDD_Xero {
 	*/
 	public static function edd_xero_settings ( $tabs ) {
 
-		$tabs['xero'] = 'Xero';
+		// $tabs['xero'] = 'Xero';
 		return $tabs;
 
 	}

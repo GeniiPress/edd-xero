@@ -3,7 +3,7 @@
  * @file
  * A single location to store configuration.
  */
-
+$settings = edd_get_settings();
 /**
  * Define for file includes. The certs directory is best stored out of web root so moving the directory
  * and updating the reference to BASE_PATH is the best way to ensure things keep working
@@ -38,8 +38,8 @@ define("OAUTH_CALLBACK",     'oob');
  */
 
 $signatures = array(
-    'consumer_key'     => 'MWWD3AUAJLWHSEIBSSUBTATYCISIET',
-    'shared_secret'    => 'ZU6OUTLJWXUCLHH8UFTBUBQMTUEFNO',
+    'consumer_key'     => $settings['consumer_key'],
+    'shared_secret'    => $settings['shared_secret'],
     // API versions
     'core_version'=> '2.0',
     'payroll_version'=> '1.0',
