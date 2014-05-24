@@ -19,7 +19,7 @@ final class Plugify_EDD_Xero {
 
 		// Setup actions for invoice creation success/fail
 		add_action( 'edd_xero_invoice_creation_success', array( &$this, 'xero_invoice_success' ), 99, 4 );
-		add_action( 'edd_xero_invoice_creation_fail', array( &$this, 'xero_invoice_fail' ), 10, 2 );
+		add_action( 'edd_xero_invoice_creation_fail', array( &$this, 'xero_invoice_fail' ), 10, 3 );
 
 		// Action for displaying Xero 'metabox' on payment details page
 		add_action( 'edd_view_order_details_sidebar_after', array( &$this, 'xero_invoice_metabox' ) );
@@ -182,10 +182,10 @@ final class Plugify_EDD_Xero {
 	* @param int $payment_id ID of EDD Payment
 	* @return void
 	*/
-	public static function xero_invoice_fail ( $invoice, $payment_id ) {
+	public static function xero_invoice_fail ( $invoice, $payment_id, $custom_message = null ) {
 
 		// Insert a note on the payment informing merchant that Xero invoice generation failed
-		edd_insert_payment_note( $payment_id, 'Xero invoice could not be created.' );
+		edd_insert_payment_note( $payment_id, $custom_message != null ? $custom_message : 'Xero invoice could not be created.' );
 
 	}
 
@@ -201,6 +201,8 @@ final class Plugify_EDD_Xero {
 		$invoice_number = get_post_meta( $_GET['id'], '_edd_payment_xero_invoice_number', true );
 		$invoice_id = get_post_meta( $_GET['id'], '_edd_payment_xero_invoice_id', true );
 
+		$valid_settings = $this->settings_are_valid();
+
 		?>
 
 		<link rel="stylesheet" media="all" href="<?php echo plugins_url( 'edd-xero/assets/css/styles.css', dirname( __FILE__ ) ); ?>" />
@@ -214,26 +216,39 @@ final class Plugify_EDD_Xero {
 				<div class="edd-admin-box">
 					<div class="edd-admin-box-inside">
 
-						<?php if( '' != $invoice_number ): ?>
+						<?php if( !$valid_settings ): ?>
 
-						<h3 class="invoice-number"><?php echo $invoice_number; ?></h3>
+							<h3 class="invoice-number">Xero settings not configured</h3>
+
+							<p>
+								Looks like you need to configure your Xero settings! You can <a href="<?php echo admin_url('edit.php?post_type=download&page=edd-settings&tab=extensions'); ?>">click here</a> to do so
+							</p>
 
 						<?php else: ?>
-						<h3 class="invoice-number text-center">No associated invoice found</h3>
-						<a id="edd-xero-generate-invoice" class="button-primary text-center" href="#">Generate Invoice Now</a>
-						<?php endif; ?>
 
-						<div id="edd_xero_invoice_details">
-							<p class="ajax-loader">
-								<img src="<?php echo plugins_url( 'edd-xero/assets/art/ajax-loader.gif', dirname( __FILE__ ) ); ?>" alt="Loading" />
-							</p>
-							<input id="_edd_xero_invoice_number" type="hidden" name="edd_xero_invoice_number" value="<?php echo $invoice_number; ?>" />
-						</div>
+							<?php if( '' != $invoice_number ): ?>
+
+							<h3 class="invoice-number"><?php echo $invoice_number; ?></h3>
+
+							<?php else: ?>
+							<h3 class="invoice-number text-center">No associated invoice found</h3>
+							<a id="edd-xero-generate-invoice" class="button-primary text-center" href="#">Generate Invoice Now</a>
+							<?php endif; ?>
+
+							<div id="edd_xero_invoice_details">
+								<p class="ajax-loader">
+									<img src="<?php echo plugins_url( 'edd-xero/assets/art/ajax-loader.gif', dirname( __FILE__ ) ); ?>" alt="Loading" />
+								</p>
+								<input id="_edd_xero_invoice_number" type="hidden" name="edd_xero_invoice_number" value="<?php echo $invoice_number; ?>" />
+							</div>
+
+						<?php endif; ?>
 
 					</div>
 				</div>
 			</div>
 
+			<?php if( $valid_settings ): ?>
 			<div class="edd-order-update-box edd-admin-box edd-invoice-actions">
 		    <div class="major-publishing-actions">
 					<div class="publishing-action">
@@ -244,9 +259,10 @@ final class Plugify_EDD_Xero {
 				</div>
 			</div>
 
-		</div>
+			<script src="<?php echo plugins_url( 'edd-xero/assets/js/functions.js', dirname( __FILE__ ) ); ?>"></script>
+		<?php endif; ?>
 
-		<script src="<?php echo plugins_url( 'edd-xero/assets/js/functions.js', dirname( __FILE__ ) ); ?>"></script>
+		</div>
 
 		<?php
 	}
@@ -396,8 +412,13 @@ final class Plugify_EDD_Xero {
 
 			}
 
-			// Send the invoie to Xero
-			return $this->put_invoice( $invoice, $payment_id );
+			// Send the invoice to Xero
+			if( $this->settings_are_valid () ) {
+				return $this->put_invoice( $invoice, $payment_id );
+			}
+			else {
+				do_action( 'edd_xero_invoice_creation_fail', $invoice, $payment_id, 'Xero settings have not been configured' );
+			}
 
 		}
 		catch( Exception $e ) {
@@ -474,6 +495,41 @@ final class Plugify_EDD_Xero {
 		catch( Exception $e ) {
 			return false;
 		}
+
+	}
+
+	/**
+	* Private helper function to check whether Xero settings exist
+	*
+	* @since 0.1
+	*
+	* @return bool Returns true if valid data is configured, false if any fields are missing
+	*/
+	private function settings_are_valid () {
+
+		$valid = true;
+
+		if( $settings = edd_get_settings() ) {
+
+			$xero_settings = array(
+				'consumer_key',
+				'shared_secret',
+				'private_key',
+				'public_key'
+			);
+
+			foreach( $xero_settings as $xero_setting ) {
+				if( !isset( $settings[$xero_setting] ) || empty( $settings[$xero_setting] ) ) {
+					$valid = false;
+				}
+			}
+
+		}
+		else {
+			$valid = false;
+		}
+
+		return $valid;
 
 	}
 
