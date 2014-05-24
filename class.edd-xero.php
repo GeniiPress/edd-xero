@@ -27,8 +27,10 @@ final class Plugify_EDD_Xero {
 		// Admin hooks
 		add_action( 'admin_init', array( &$this, 'admin_init' ) );
 
+		// Write certificate key files when user updates textarea fields
+		add_action( 'updated_option', array( &$this, 'xero_write_keys' ), 10, 3 );
+
 		// EDD filters which need to be leveraged
-		add_filter( 'edd_settings_tabs', array( &$this, 'edd_xero_settings' ), 10, 1 );
 		add_filter( 'edd_settings_extensions', array( &$this, 'edd_xero_register_settings' ), 10, 1 );
 
 		// Load Xero PHP library
@@ -103,13 +105,13 @@ final class Plugify_EDD_Xero {
 				'id' => 'private_key',
 				'name' => __( 'Private Key', 'edd-xero' ),
 				'desc' => __( 'Private key file (.pem)', 'edd-xero' ),
-				'type' => 'upload'
+				'type' => 'textarea'
 			),
 			'public_key' => array(
 				'id' => 'public_key',
 				'name' => __( 'Public Key', 'edd-xero' ),
 				'desc' => __( 'Public Key file (.cer)', 'edd-xero' ),
-				'type' => 'upload'
+				'type' => 'textarea'
 			)
 		);
 
@@ -117,18 +119,23 @@ final class Plugify_EDD_Xero {
 
 	}
 
-	/**
-	* Add a 'Xero' tab to the EDD settings page. Leverages the 'edd_settings_tabs' filter
-	*
-	* @since 0.1
-	*
-	* @param array $tabs Array of tabs to be displayed on the EDD settings page
-	* @return array Returns updated array of tabs to be displayed on the EDD settings page
-	*/
-	public static function edd_xero_settings ( $tabs ) {
+	public static function xero_write_keys ( $option, $old_value, $new_value ) {
 
-		// $tabs['xero'] = 'Xero';
-		return $tabs;
+		if( $option == 'edd_settings' ) {
+
+			$keys = array(
+				'privatekey.pem' => $new_value['private_key'],
+				'publickey.cer' => $new_value['public_key']
+			);
+
+			// Attempt to write key files
+			foreach( $keys as $filename => $data ) {
+				if( !empty( $data ) ) {
+					file_put_contents( dirname( __FILE__ ) . '/lib/oauth/certs/' . $filename, $data );
+				}
+			}
+
+		}
 
 	}
 
