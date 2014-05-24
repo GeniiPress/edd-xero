@@ -2,7 +2,7 @@
 !* edd-xero scripts
 */
 
-jQuery( function($) {
+jQuery(document).ready( function($) {
 
 	var invoice_number = $('#_edd_xero_invoice_number').val();
 	var invoice_content = $('#edd_xero_invoice_details');

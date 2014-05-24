@@ -260,7 +260,7 @@ final class Plugify_EDD_Xero {
 			</div>
 
 			<script src="<?php echo plugins_url( 'edd-xero/assets/js/functions.js', dirname( __FILE__ ) ); ?>"></script>
-		<?php endif; ?>
+			<?php endif; ?>
 
 		</div>
 
