@@ -50,6 +50,9 @@ jQuery(document).ready( function($) {
 					$('#edd_xero_invoice_details, #edd-xero .edd-invoice-actions').fadeIn(400);
 
 				}
+				else {
+					$('#edd_xero_invoice_details').empty().append(result.data.error_message);
+				}
 
 			}
 		});
