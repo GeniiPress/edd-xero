@@ -119,6 +119,17 @@ final class Plugify_EDD_Xero {
 
 	}
 
+	/**
+	* When a user sets new private/public key values in Xero settings, write the values to the .pem and .cer files required for OAuth
+	* Leverages the updated option hook
+	*
+	* @since 0.1
+	*
+	* @param $option string Name of the option updated. For our purposes, we're just listening for "edd_settings"
+	* @param $old_value array The old value of edd_settings option
+	* @param $new_value array The new value of edd_settings option
+	* @return void
+	*/
 	public static function xero_write_keys ( $option, $old_value, $new_value ) {
 
 		if( $option == 'edd_settings' ) {
