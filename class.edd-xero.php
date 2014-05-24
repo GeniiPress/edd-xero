@@ -280,7 +280,7 @@ final class Plugify_EDD_Xero {
 			wp_send_json_error();
 		}
 
-		if( $response = $this->get_invoice( $_REQUEST['invoice_number'] ) ) {
+		if( $response = @$this->get_invoice( $_REQUEST['invoice_number'] ) ) {
 			$return = $this->get_invoice_excerpt( $response );
 			wp_send_json_success( $return );
 		}
@@ -302,7 +302,7 @@ final class Plugify_EDD_Xero {
 			wp_send_json_error();
 		}
 
-		if( $response = $this->create_invoice( $_REQUEST['payment_id'] ) ) {
+		if( $response = @$this->create_invoice( $_REQUEST['payment_id'] ) ) {
 			$return = $this->get_invoice_excerpt( $response );
 			wp_send_json_success( $return );
 		}
