@@ -89,6 +89,11 @@ final class Plugify_EDD_Xero {
 				'name' => __( "$img Xero Settings", 'edd-xero' ),
 				'type' => 'header'
 			),
+			'xero_settings_description' => array(
+				'id' => 'xero_settings_description',
+				'name' => __( '', 'edd-xero' ),
+				'type' => 'description'
+			),
 			'consumer_key' => array(
 				'id' => 'consumer_key',
 				'name' => __( 'Consumer Key', 'edd-xero' ),
@@ -532,6 +537,40 @@ final class Plugify_EDD_Xero {
 		}
 
 		return $valid;
+
+	}
+
+}
+
+/**
+* Cheeky little EDD "description" settings field callback in the global space
+* Handles rendering fields of type "description"
+*
+* @since 0.1
+*
+* @return void
+*/
+if( !function_exists( 'edd_description_callback' ) ) {
+
+	function edd_description_callback () {
+
+		?>
+
+		<p>Please supply the required details for Easy Digital Downloads + Xero to function.<br />If you need help, please follow the below list of instructions.</p>
+
+		<ol class="instructions">
+			<li>Login to <a href="http://developer.xero.com/" target="_blank">http://developer.xero.com/</a> using your usual Xero account</li>
+			<li>Navigate to the <a href="https://api.xero.com/Application/List" target="_blank">My Applications</a> tab</li>
+			<li>Click "Add Application"</li>
+			<li>You should see an option for creating a Public or Private application. <strong>Choose Private</strong></li>
+			<li>The next step is a bit tricky. <a href="http://developer.xero.com/documentation/getting-started/private-applications/" target="_blank">Please follow Xero's documentation here on creating a Private Xero Application</a></li>
+			<li>When you have created the application, copy and paste your Consumer Key and Shared Secret in to the fields below</li>
+			<li>After you have pasted in your Consumey Key and Shared Secret, open your privatekey.pen and publickey.cer files and paste their contents in to the respective fields below</li>
+			<li>Click Save Changes</li>
+
+		</ol>
+
+		<?
 
 	}
 
