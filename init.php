@@ -4,7 +4,7 @@ Plugin Name: Easy Digital Downloads + Xero
 Plugin URI: https://plugify.io
 Description: Integrate your Easy Digital Downloads store with your Xero account
 Author: Plugify
-Version: 0.1
+Version: 0.9
 Author URI: https://plugify.io
 */
 
