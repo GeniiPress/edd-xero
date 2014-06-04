@@ -26,6 +26,7 @@ final class Plugify_EDD_Xero {
 
 		// Admin hooks
 		add_action( 'admin_init', array( &$this, 'admin_init' ) );
+		add_action( 'admin_enqueue_scripts', array( &$this, 'admin_enqueue_scripts' ) );
 
 		// Write certificate key files when user updates textarea fields
 		add_action( 'updated_option', array( &$this, 'xero_write_keys' ), 10, 3 );
@@ -68,6 +69,20 @@ final class Plugify_EDD_Xero {
 		add_action( 'wp_ajax_invoice_lookup', array( &$this, 'ajax_xero_invoice_lookup' ) );
 		add_action( 'wp_ajax_generate_invoice', array( &$this, 'ajax_generate_invoice' ) );
 		add_action( 'wp_ajax_disassociate_invoice', array( &$this, 'ajax_disassociate_invoice' ) );
+
+	}
+
+	/**
+	* Queue up styles that EDD Xero uses in the admin area
+	*
+	* @since 0.9
+	*
+	* @return void
+	*/
+	public function admin_enqueue_scripts () {
+
+		// Enqueue styles for EDD Xero
+		wp_enqueue_style( 'edd-xero-styles', plugins_url( 'edd-xero/assets/css/styles.css', dirname( __FILE__ ) ) );
 
 	}
 
@@ -207,8 +222,6 @@ final class Plugify_EDD_Xero {
 		$valid_settings = $this->settings_are_valid();
 
 		?>
-
-		<link rel="stylesheet" media="all" href="<?php echo plugins_url( 'edd-xero/assets/css/styles.css', dirname( __FILE__ ) ); ?>" />
 
 		<div id="edd-xero" class="postbox edd-order-data">
 
