@@ -4,7 +4,7 @@
 
 abstract class Xero_Resource {
 
-	public function get_xml ( $readable = false ) {
+	public function get_xml () {
 		return 'You have not overriden get_xml() in ' . get_parent_class();
 	}
 
