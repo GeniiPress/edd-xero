@@ -341,7 +341,9 @@ final class Plugify_EDD_Xero {
 			wp_send_json_success( $return );
 		}
 		else {
-			wp_send_json_error();
+			wp_send_json_error( array(
+				'error_message' => __( 'Xero invoice could not be created. Please refresh the page and check Payment Notes.', 'edd-xero' )
+			) );
 		}
 
 	}

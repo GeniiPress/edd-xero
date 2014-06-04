@@ -102,6 +102,14 @@ jQuery(document).ready( function($) {
 						$('#edd_xero_invoice_details, #edd-xero .edd-invoice-actions').fadeIn(400);
 
 					}
+					else {
+
+						alert(result.data.error_message);
+
+						button.show();
+						invoice_content.hide();
+
+					}
 
 				},
 				error: function() {
