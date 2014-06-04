@@ -9,8 +9,13 @@ Author URI: https://plugify.io
 */
 
 // Ensure WordPress has been bootstrapped
-if( !defined( 'ABSPATH' ) )
+if( !defined( 'ABSPATH' ) ) {
 	exit;
+}
+
+if( !class_exists( 'Easy_Digital_Downloads' ) ) {
+	return;
+}
 
 $path = trailingslashit( dirname( __FILE__ ) );
 
