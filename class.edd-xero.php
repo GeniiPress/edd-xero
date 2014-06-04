@@ -81,12 +81,10 @@ final class Plugify_EDD_Xero {
 	*/
 	public static function edd_xero_register_settings ( $edd_settings ) {
 
-		$img = '<img src="' . plugins_url( 'edd-xero/assets/art/xero-logo@2x.png' , dirname(__FILE__) ) . '" width="12" height="12" style="position:relative;top:1px;" />';
-
 		$settings = array(
 			'xero_settings_header' => array(
 				'id' => 'xero_settings_header',
-				'name' => __( "$img Xero Settings", 'edd-xero' ),
+				'name' => __( 'Xero Settings', 'edd-xero' ),
 				'type' => 'header'
 			),
 			'xero_settings_description' => array(
