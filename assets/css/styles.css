@@ -1,55 +1,47 @@
 /*
 !* edd-xero back-end styles
 */
-#edd-xero {
-
+#edd-xero .text-center {
+	text-align: center;
 }
 
-	#edd-xero .ajax-loader {
+#edd-xero .ajax-loader img {
+	display: block;
+	padding: 0.4em 0;
+	margin: 0 auto;
+}
 
+#edd-xero #edd-xero-generate-invoice {
+	margin: 10px auto 0;
+	width: 160px;
+	display: block;
+}
+
+#edd-xero #edd_xero_invoice_details {
+	display: none;
+}
+
+#edd-xero .major-publishing-actions {
+	padding: 10px;
+	clear: both;
+	border-top: 1px solid #DDD;
+	background: none repeat scroll 0% 0% #F5F5F5;
+}
+
+	#edd-xero .major-publishing-actions .publishing-action {
+		text-align: right;
+		float: right;
+		line-height: 23px;
 	}
 
-		#edd-xero .text-center {
-			text-align: center;
+		#edd-xero .major-publishing-actions .publishing-action .button-primary {
+
 		}
 
-		#edd-xero .ajax-loader img {
-			display: block;
-			padding: 0.4em 0;
-			margin: 0 auto;
+		#edd-xero .major-publishing-actions .publishing-action .button-secondary {
+			margin-right: 10px;
 		}
 
-		#edd-xero #edd-xero-generate-invoice {
-			margin: 10px auto 0;
-			width: 160px;
-			display: block;
-		}
-
-		#edd-xero #edd_xero_invoice_details {
-			display: none;
-		}
-
-		#edd-xero .major-publishing-actions {
-			padding: 10px;
-			clear: both;
-			border-top: 1px solid #DDD;
-			background: none repeat scroll 0% 0% #F5F5F5;
-		}
-
-			#edd-xero .major-publishing-actions .publishing-action {
-				text-align: right;
-				float: right;
-				line-height: 23px;
-			}
-
-				#edd-xero .major-publishing-actions .publishing-action .button-primary {
-
-				}
-
-				#edd-xero .major-publishing-actions .publishing-action .button-secondary {
-					margin-right: 10px;
-				}
-
-		#edd-xero .edd-invoice-actions {
-			display: none;
-		}
+#edd-xero .edd-invoice-actions {
+	display: none;
+}
