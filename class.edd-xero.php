@@ -72,7 +72,7 @@ final class Plugify_EDD_Xero {
 	}
 
 	/**
-	* Register settings fields where the user can insert the consumer key, shared secret etc..
+	* Register settings fields where the user can insert the consumer key, consumer secret etc..
 	* Currently displays under the Extensions tab in EDD settings
 	*
 	* @since 0.1
@@ -100,8 +100,8 @@ final class Plugify_EDD_Xero {
 			),
 			'shared_secret' => array(
 				'id' => 'shared_secret',
-				'name' => __( 'Shared Secret', 'edd-xero' ),
-				'desc' => __( 'The shared secret of your Xero application.', 'edd-xero' ),
+				'name' => __( 'Consumer Secret', 'edd-xero' ),
+				'desc' => __( 'The consumer secret of your Xero application.', 'edd-xero' ),
 				'type' => 'text'
 			),
 			'private_key' => array(
@@ -562,8 +562,8 @@ if( !function_exists( 'edd_description_callback' ) ) {
 			<li>Click "Add Application"</li>
 			<li>You should see an option for creating a Public or Private application. <strong>Choose Private</strong></li>
 			<li>The next step is a bit tricky. <a href="http://developer.xero.com/documentation/getting-started/private-applications/" target="_blank">Please follow Xero's documentation here on creating a Private Xero Application</a></li>
-			<li>When you have created the application, copy and paste your Consumer Key and Shared Secret in to the fields below</li>
-			<li>After you have pasted in your Consumey Key and Shared Secret, open your privatekey.pen and publickey.cer files and paste their contents in to the respective fields below</li>
+			<li>When you have created the application, copy and paste your Consumer Key and Consumer Secret in to the fields below</li>
+			<li>After you have pasted in your Consumer Key and Consumer Secret, open your privatekey.pen and publickey.cer files and paste their contents in to the respective fields below</li>
 			<li>Click Save Changes</li>
 
 		</ol>
