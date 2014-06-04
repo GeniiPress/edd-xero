@@ -415,7 +415,13 @@ final class Plugify_EDD_Xero {
 		// Prepare required data such as customer details and cart contents
 		$payment = edd_get_payment_meta( $payment_id );
 		$cart = edd_get_payment_meta_cart_details( $payment_id );
-		$contact = unserialize( $payment['user_info'] );
+
+		if( is_array( $payment['user_info'] ) ) {
+			$contact = $payment['user_info'];
+		}
+		else {
+			$contact = unserialize( $payment['user_info'] );
+		}
 
 		try {
 
@@ -450,7 +456,7 @@ final class Plugify_EDD_Xero {
 
 			// Send the invoice to Xero
 			if( $this->settings_are_valid () ) {
-				return $this->put_invoice( $invoice, $payment_id );
+				return @$this->put_invoice( $invoice, $payment_id );
 			}
 			else {
 				do_action( 'edd_xero_invoice_creation_fail', $invoice, $payment_id, NULL, __( 'Xero settings have not been configured', 'edd-xero' ) );
