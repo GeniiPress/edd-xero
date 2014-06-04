@@ -38,8 +38,8 @@ define("OAUTH_CALLBACK",     'oob');
  */
 
 $signatures = array(
-    'consumer_key'     => $settings['consumer_key'],
-    'shared_secret'    => $settings['shared_secret'],
+    'consumer_key'     => isset( $settings['consumer_key'] ) ? $settings['consumer_key'] : '',
+    'shared_secret'    => isset( $settings['shared_secret'] ) ? $settings['shared_secret'] : '',
     // API versions
     'core_version'=> '2.0',
     'payroll_version'=> '1.0',
