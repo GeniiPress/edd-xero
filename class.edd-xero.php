@@ -203,7 +203,7 @@ final class Plugify_EDD_Xero {
 	public static function xero_invoice_fail ( $invoice, $payment_id, $custom_message = null ) {
 
 		// Insert a note on the payment informing merchant that Xero invoice generation failed
-		edd_insert_payment_note( $payment_id, $custom_message != null ? $custom_message : 'Xero invoice could not be created.' );
+		edd_insert_payment_note( $payment_id, $custom_message != null ? $custom_message : __( 'Xero invoice could not be created.', 'edd-xero' ) );
 
 	}
 
@@ -237,7 +237,8 @@ final class Plugify_EDD_Xero {
 							<h3 class="invoice-number">Xero settings not configured</h3>
 
 							<p>
-								Looks like you need to configure your Xero settings! You can <a href="<?php echo admin_url('edit.php?post_type=download&page=edd-settings&tab=extensions'); ?>">click here</a> to do so
+								<?php echo __( 'Looks like you need to configure your Xero settings!', 'edd-xero' ); ?>
+								<?php echo __( 'You can <a href="' . admin_url('edit.php?post_type=download&page=edd-settings&tab=extensions') . '">click here</a> to do so', 'edd-xero' ); ?>
 							</p>
 
 						<?php else: ?>
@@ -247,8 +248,8 @@ final class Plugify_EDD_Xero {
 							<h3 class="invoice-number"><?php echo $invoice_number; ?></h3>
 
 							<?php else: ?>
-							<h3 class="invoice-number text-center">No associated invoice found</h3>
-							<a id="edd-xero-generate-invoice" class="button-primary text-center" href="#">Generate Invoice Now</a>
+							<h3 class="invoice-number text-center"><?php echo __( 'No associated invoice found', 'edd-xero' ); ?></h3>
+							<a id="edd-xero-generate-invoice" class="button-primary text-center" href="#"><?php echo __( 'Generate Invoice Now', 'edd-xero' ); ?></a>
 							<?php endif; ?>
 
 							<div id="edd_xero_invoice_details">
@@ -268,8 +269,8 @@ final class Plugify_EDD_Xero {
 			<div class="edd-order-update-box edd-admin-box edd-invoice-actions">
 		    <div class="major-publishing-actions">
 					<div class="publishing-action">
-						<a id="edd-view-invoice-in-xero" class="button-primary right" target="_blank" href="https://go.xero.com/AccountsReceivable/Edit.aspx?InvoiceID=<?php echo $invoice_id; ?>">View in Xero</a>
-						<a id="edd-xero-disassociate-invoice" class="button-secondary right" href="#">Disassociate Invoice</a>
+						<a id="edd-view-invoice-in-xero" class="button-primary right" target="_blank" href="https://go.xero.com/AccountsReceivable/Edit.aspx?InvoiceID=<?php echo $invoice_id; ?>"><?php echo __( 'View in Xero', 'edd-xero' ); ?></a>
+						<a id="edd-xero-disassociate-invoice" class="button-secondary right" href="#"><?php echo __( 'Disassociate Invoice', 'edd-xero' ); ?></a>
 					</div>
 					<div class="clear"></div>
 				</div>
@@ -302,7 +303,7 @@ final class Plugify_EDD_Xero {
 		}
 
 		wp_send_json_error( array(
-			'error_message' => '<p>We could not get the invoice details. <a href="' . admin_url('edit.php?post_type=download&page=edd-settings&tab=extensions') . '" target="_blank">Are your Xero settings configured correctly?</a></p>'
+			'error_message' => sprintf( '<p>%s <a href="' . admin_url('edit.php?post_type=download&page=edd-settings&tab=extensions') . '" target="_blank">%s</a>', __( 'We could not get the invoice details', 'edd-xero' ), __( 'Are your Xero settings configured correctly?', 'edd-xero' ) )
 		) );
 
 	}
@@ -435,7 +436,7 @@ final class Plugify_EDD_Xero {
 				return $this->put_invoice( $invoice, $payment_id );
 			}
 			else {
-				do_action( 'edd_xero_invoice_creation_fail', $invoice, $payment_id, 'Xero settings have not been configured' );
+				do_action( 'edd_xero_invoice_creation_fail', $invoice, $payment_id, __( 'Xero settings have not been configured', 'edd-xero' ) );
 			}
 
 		}
@@ -567,17 +568,17 @@ if( !function_exists( 'edd_description_callback' ) ) {
 
 		?>
 
-		<p>Please supply the required details for Easy Digital Downloads + Xero to function.<br />If you need help, please follow the below list of instructions.</p>
+		<p><?php echo __( 'Please supply the required details for Easy Digital Downloads - Xero to function.', 'edd-xero' ); ?><br /><?php echo __( 'If you need help, please follow the below list of instructions.', 'edd-xero' ); ?></p>
 
 		<ol class="instructions">
-			<li>Login to <a href="http://developer.xero.com/" target="_blank">http://developer.xero.com/</a> using your usual Xero account</li>
-			<li>Navigate to the <a href="https://api.xero.com/Application/List" target="_blank">My Applications</a> tab</li>
-			<li>Click "Add Application"</li>
-			<li>You should see an option for creating a Public or Private application. <strong>Choose Private</strong></li>
+			<li><?php echo sprintf( '%s <a href="http://developer.xero.com/" target="_blank">http://developer.xero.com/</a> %s', __( 'Login to', 'edd-xero' ), __( 'using your usual Xero account', 'edd-xero' ) ); ?></li>
+			<li><?php echo sprintf( '%s <a href="https://api.xero.com/Application/List" target="_blank">My Applications</a> tab', __( 'Navigate to the', 'edd-xero' ), __( 'tab', 'edd-xero' ) ); ?></li>
+			<li><?php echo __(' Click "Add Application"', 'edd-xero' ); ?></li>
+			<li><?php echo __( 'You should see an option for creating a Public or Private application.', 'edd-xero' ); ?> <strong><?php echo __( 'Choose Private', 'edd-xero' ); ?></strong></li>
 			<li>The next step is a bit tricky. <a href="http://developer.xero.com/documentation/getting-started/private-applications/" target="_blank">Please follow Xero's documentation here on creating a Private Xero Application</a></li>
-			<li>When you have created the application, copy and paste your Consumer Key and Consumer Secret in to the fields below</li>
-			<li>After you have pasted in your Consumer Key and Consumer Secret, open your privatekey.pen and publickey.cer files and paste their contents in to the respective fields below</li>
-			<li>Click Save Changes</li>
+			<li><?php echo __( 'When you have created the application, copy and paste your Consumer Key and Consumer Secret in to the fields below', 'edd-xero' ); ?></li>
+			<li><?php echo __( 'After you have pasted in your Consumer Key and Consumer Secret, open your privatekey.pen and publickey.cer files and paste their contents in to the respective fields below', 'edd-xero' ); ?></li>
+			<li><?php echo __( 'Click Save Changes', 'edd-xero' ); ?></li>
 
 		</ol>
 
