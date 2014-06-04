@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Easy Digital Downloads + Xero
+Plugin Name: Easy Digital Downloads - Xero
 Plugin URI: https://plugify.io
 Description: Integrate your Easy Digital Downloads store with your Xero account
 Author: Plugify
