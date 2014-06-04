@@ -75,5 +75,3 @@ class Xero_Line_Item extends Xero_Resource {
 	}
 
 }
-
-?>

@@ -35,5 +35,3 @@ require_once( $path . 'class.edd-xero.php' );
 
 // Boot Plugify Xero integration for EDD
 new Plugify_EDD_Xero();
-
-?>

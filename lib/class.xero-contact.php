@@ -102,5 +102,3 @@ class Xero_Contact extends Xero_Resource {
 	}
 
 }
-
-?>

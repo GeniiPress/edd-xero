@@ -121,5 +121,3 @@ class Xero_Invoice extends Xero_Resource {
 	}
 
 }
-
-?>

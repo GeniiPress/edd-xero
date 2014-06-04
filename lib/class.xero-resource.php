@@ -9,5 +9,3 @@ abstract class Xero_Resource {
 	}
 
 }
-
-?>
