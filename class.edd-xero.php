@@ -19,7 +19,7 @@ final class Plugify_EDD_Xero {
 
 		// Setup actions for invoice creation success/fail
 		add_action( 'edd_xero_invoice_creation_success', array( &$this, 'xero_invoice_success' ), 99, 4 );
-		add_action( 'edd_xero_invoice_creation_fail', array( &$this, 'xero_invoice_fail' ), 10, 3 );
+		add_action( 'edd_xero_invoice_creation_fail', array( &$this, 'xero_invoice_fail' ), 10, 4 );
 
 		// Action for displaying Xero 'metabox' on payment details page
 		add_action( 'edd_view_order_details_sidebar_after', array( &$this, 'xero_invoice_metabox' ) );
@@ -198,12 +198,27 @@ final class Plugify_EDD_Xero {
 	*
 	* @param Xero_Invoice $invoice Xero_Invoice object of invoice which failed to generate in Xero
 	* @param int $payment_id ID of EDD Payment
+	* @param mixed $error_obj (optional) An object which was used in the context of creating a Xero invoice which subsequently failed
+	* @param string $custom_message (optional) Allow a developer to pass in the error message they want written on the EDD payment note
 	* @return void
 	*/
-	public static function xero_invoice_fail ( $invoice, $payment_id, $custom_message = null ) {
+	public static function xero_invoice_fail ( $invoice, $payment_id, $error_obj = null, $custom_message = null ) {
 
-		// Insert a note on the payment informing merchant that Xero invoice generation failed
-		edd_insert_payment_note( $payment_id, $custom_message != null ? $custom_message : __( 'Xero invoice could not be created.', 'edd-xero' ) );
+		$postfix = null;
+
+		if( !is_null( $error_obj ) ){
+
+			if( isset( $error_obj['response'] ) ) {
+				$postfix = $error_obj['response'];
+			}
+
+			// Allow space here for another possible $error_obj context, an Exception object, for example
+
+		}
+
+		// Insert a note on the payment informing merchant that Xero invoice generation failed, and why
+		$message = !is_null( $custom_message ) ? __( $custom_message, 'edd-xero' ) : __( 'Xero invoice could not be created.', 'edd-xero' );
+		edd_insert_payment_note( $payment_id, $message . ( !is_null( $postfix ) ? ' Xero said: ' . $postfix : NULL ) );
 
 	}
 
@@ -436,7 +451,7 @@ final class Plugify_EDD_Xero {
 				return $this->put_invoice( $invoice, $payment_id );
 			}
 			else {
-				do_action( 'edd_xero_invoice_creation_fail', $invoice, $payment_id, __( 'Xero settings have not been configured', 'edd-xero' ) );
+				do_action( 'edd_xero_invoice_creation_fail', $invoice, $payment_id, NULL, __( 'Xero settings have not been configured', 'edd-xero' ) );
 			}
 
 		}
@@ -478,14 +493,14 @@ final class Plugify_EDD_Xero {
 				do_action( 'edd_xero_invoice_creation_success', $invoice, (string)$response->Invoices->Invoice->InvoiceNumber, (string)$response->Invoices->Invoice->InvoiceID, $payment_id );
 			}
 			else {
-				do_action( 'edd_xero_invoice_creation_fail', $invoice, $payment_id );
+				do_action( 'edd_xero_invoice_creation_fail', $invoice, $payment_id, $request );
 			}
 
 			return $response;
 
 		}
 		catch( Exception $e ) {
-			do_action( 'edd_xero_invoice_creation_fail', $invoice, $payment_id );
+			do_action( 'edd_xero_invoice_creation_fail', $invoice, $payment_id, $e );
 		}
 
 	}
