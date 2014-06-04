@@ -82,7 +82,7 @@ final class Plugify_EDD_Xero {
 	public function admin_enqueue_scripts () {
 
 		// Enqueue styles for EDD Xero
-		wp_enqueue_style( 'edd-xero-styles', plugins_url( 'edd-xero/assets/css/styles.css', dirname( __FILE__ ) ) );
+		wp_enqueue_style( 'edd-xero-styles', plugin_dir_url( __FILE__ ) . 'assets/css/styles.css' );
 
 	}
 
@@ -226,7 +226,7 @@ final class Plugify_EDD_Xero {
 		<div id="edd-xero" class="postbox edd-order-data">
 
 			<h3 class="hndle">
-				<span><img src="<?php echo plugins_url( 'edd-xero/assets/art/xero-logo@2x.png' , dirname(__FILE__) ); ?>" width="12" height="12" style="position:relative;top:1px;" />&nbsp; Xero</span>
+				<span><img src="<?php echo plugin_dir_url( __FILE__ ) . 'assets/art/xero-logo@2x.png'; ?>" width="12" height="12" style="position:relative;top:1px;" />&nbsp; Xero</span>
 			</h3>
 			<div class="inside">
 				<div class="edd-admin-box">
@@ -253,7 +253,7 @@ final class Plugify_EDD_Xero {
 
 							<div id="edd_xero_invoice_details">
 								<p class="ajax-loader">
-									<img src="<?php echo plugins_url( 'edd-xero/assets/art/ajax-loader.gif', dirname( __FILE__ ) ); ?>" alt="Loading" />
+									<img src="<?php echo plugin_dir_url( __FILE__ ) . 'assets/art/ajax-loader.gif'; ?>" alt="Loading" />
 								</p>
 								<input id="_edd_xero_invoice_number" type="hidden" name="edd_xero_invoice_number" value="<?php echo $invoice_number; ?>" />
 							</div>
@@ -275,7 +275,7 @@ final class Plugify_EDD_Xero {
 				</div>
 			</div>
 
-			<script src="<?php echo plugins_url( 'edd-xero/assets/js/functions.js', dirname( __FILE__ ) ); ?>"></script>
+			<script src="<?php echo plugin_dir_url( __FILE__ ) . 'assets/js/functions.js'; ?>"></script>
 			<?php endif; ?>
 
 		</div>
