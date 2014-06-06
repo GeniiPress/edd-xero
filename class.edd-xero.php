@@ -187,7 +187,7 @@ final class Plugify_EDD_Xero {
 		update_post_meta( $payment_id, '_edd_payment_xero_invoice_id', $invoice_id );
 
 		// Insert a note on the payment informing the merchant Xero invoice generation was successful
-		edd_insert_payment_note( $payment_id, 'Xero invoice ' . $invoice_number . ' successfully created' );
+		edd_insert_payment_note( $payment_id, __( 'Xero invoice ' . $invoice_number . ' successfully created', 'edd-xero' ) );
 
 	}
 
@@ -218,7 +218,7 @@ final class Plugify_EDD_Xero {
 
 		// Insert a note on the payment informing merchant that Xero invoice generation failed, and why
 		$message = !is_null( $custom_message ) ? __( $custom_message, 'edd-xero' ) : __( 'Xero invoice could not be created.', 'edd-xero' );
-		edd_insert_payment_note( $payment_id, $message . ( !is_null( $postfix ) ? ' Xero said: ' . $postfix : NULL ) );
+		edd_insert_payment_note( $payment_id, $message . ( !is_null( $postfix ) ? __( ' Xero said: ' . $postfix, 'edd-xero' ) : NULL ) );
 
 	}
 
