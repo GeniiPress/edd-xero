@@ -605,7 +605,7 @@ if( !function_exists( 'edd_description_callback' ) ) {
 
 		</ol>
 
-		<?
+		<?php
 
 	}
 
