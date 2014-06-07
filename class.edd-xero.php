@@ -82,7 +82,10 @@ final class Plugify_EDD_Xero {
 	public function admin_enqueue_scripts () {
 
 		// Enqueue styles for EDD Xero
-		wp_enqueue_style( 'edd-xero-styles', plugin_dir_url( __FILE__ ) . 'assets/css/styles.css' );
+		wp_enqueue_style( 'edd-xero', plugin_dir_url( __FILE__ ) . 'assets/css/edd-xero.css' );
+
+		// Enqueue scripts for EDD
+		wp_enqueue_script( 'edd-xero-js', plugin_dir_url( __FILE__ ) . 'assets/js/edd-xero.js', array( 'jquery' ) );
 
 	}
 
@@ -290,8 +293,6 @@ final class Plugify_EDD_Xero {
 					<div class="clear"></div>
 				</div>
 			</div>
-
-			<script src="<?php echo plugin_dir_url( __FILE__ ) . 'assets/js/functions.js'; ?>"></script>
 			<?php endif; ?>
 
 		</div>
