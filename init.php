@@ -27,8 +27,9 @@ $inits = array(
 	'Xero_Line_Item' => $path . 'lib/class.xero-line-item.php'
 );
 
-foreach( $inits as $class => $file )
+foreach( $inits as $class => $file ) {
 	require_once $file;
+}
 
 if( !class_exists( 'Plugify_EDD_Xero' ) )
 require_once( $path . 'class.edd-xero.php' );
