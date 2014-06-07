@@ -73,7 +73,7 @@ final class Plugify_EDD_Xero {
 	}
 
 	/**
-	* Queue up styles that EDD Xero uses in the admin area
+	* Queue up styles and scripts that EDD Xero uses in the admin area
 	*
 	* @since 0.9
 	*
@@ -81,11 +81,17 @@ final class Plugify_EDD_Xero {
 	*/
 	public function admin_enqueue_scripts () {
 
-		// Enqueue styles for EDD Xero
-		wp_enqueue_style( 'edd-xero', plugin_dir_url( __FILE__ ) . 'assets/css/edd-xero.css' );
+		$screen = get_current_screen();
 
-		// Enqueue scripts for EDD
-		wp_enqueue_script( 'edd-xero-js', plugin_dir_url( __FILE__ ) . 'assets/js/edd-xero.js', array( 'jquery' ) );
+		if( $screen->id == 'download_page_edd-payment-history' && $screen->post_type == 'download' ) {
+
+			// Enqueue styles for EDD Xero
+			wp_enqueue_style( 'edd-xero', plugin_dir_url( __FILE__ ) . 'assets/css/edd-xero.css' );
+
+			// Enqueue scripts for EDD
+			wp_enqueue_script( 'edd-xero-js', plugin_dir_url( __FILE__ ) . 'assets/js/edd-xero.js', array( 'jquery' ) );
+
+		}
 
 	}
 
