@@ -13,10 +13,6 @@ if( !defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if( !class_exists( 'Easy_Digital_Downloads' ) ) {
-	return;
-}
-
 $path = trailingslashit( dirname( __FILE__ ) );
 
 // Ensure our class dependencies class has been defined

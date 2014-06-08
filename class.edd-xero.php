@@ -6,6 +6,9 @@ final class Plugify_EDD_Xero {
 
 	private $xero_config = array();
 
+	private $basename;
+	private $title;
+
 	/**
 	* Class constructor. Hook in to EDD, setup actions and everything we need.
 	*
@@ -13,6 +16,22 @@ final class Plugify_EDD_Xero {
 	* @return void
 	*/
 	public function __construct () {
+
+		// Setup vars
+		$this->basename = 'edd-xero/init.php'; // Can't use plugin_basename etc as init.php is the activation file
+		$this->title = 'Easy Digital Downloads - Xero';
+
+		$this->initialize();
+
+	}
+
+	/**
+	* Function to initialize everything the plugin needs to operate. WP Hooks and OAuth library
+	*
+	* @since 0.9
+	* @return void
+	*/
+	public function initialize () {
 
 		// Hook in to created payments
 		add_action( 'edd_complete_purchase', array( &$this, 'create_invoice' ) );
@@ -26,6 +45,7 @@ final class Plugify_EDD_Xero {
 
 		// Admin hooks
 		add_action( 'admin_init', array( &$this, 'admin_init' ) );
+		add_action( 'admin_notices', array( &$this, 'admin_notices' ) );
 		add_action( 'admin_enqueue_scripts', array( &$this, 'admin_enqueue_scripts' ) );
 
 		// Write certificate key files when user updates textarea fields
@@ -33,25 +53,6 @@ final class Plugify_EDD_Xero {
 
 		// EDD filters which need to be leveraged
 		add_filter( 'edd_settings_extensions', array( &$this, 'edd_xero_register_settings' ), 10, 1 );
-
-		// Load Xero PHP library
-		$path = trailingslashit( dirname( __FILE__ ) );
-
-		require_once $path . 'lib/oauth/_config.php';
-		require_once $path . 'lib/oauth/lib/OAuthSimple.php';
-		require_once $path . 'lib/oauth/lib/XeroOAuth.php';
-
-		$this->xero_config = array_merge (
-
-			array(
-				'application_type' => XRO_APP_TYPE,
-				'oauth_callback' => OAUTH_CALLBACK,
-				'user_agent' => 'Plugify-EDD-Xero'
-			),
-
-			$signatures
-
-		);
 
 	}
 
@@ -90,6 +91,48 @@ final class Plugify_EDD_Xero {
 
 			// Enqueue scripts for EDD
 			wp_enqueue_script( 'edd-xero-js', plugin_dir_url( __FILE__ ) . 'assets/js/edd-xero.js', array( 'jquery' ) );
+
+		}
+
+	}
+
+	/**
+	* Handle displaying any required admin notices.
+	* Since 0.9, displays whether EDD needs to be activated or if it's not of a high enough version
+	*
+	* @since 0.9
+	*
+	* @return void
+	*/
+	public function admin_notices () {
+
+		// Display a notice if EDD is not installed and deactivate plugin
+		if( !class_exists( 'Easy_Digital_Downloads' ) ) {
+
+			// Make sure this plugin is active
+			if( is_plugin_active( $this->basename ) ) {
+
+				// Deactivate EDD Xero
+				deactivate_plugins( $this->basename );
+
+				// Turn off activation admin notice
+				if( isset( $_GET['activate'] ) ) {
+					unset( $_GET['activate'] );
+				}
+
+				echo '<div class="error"><p>' . sprintf( __( '%s has been deactivated because it requires Easy Digital Downloads to be installed and activated', 'edd-xero' ), $this->title ) . '</p></div>';
+
+			}
+
+		}
+		else {
+
+			// If EDD is installed but version is too low, display a notice
+			$edd_plugin_data = get_plugin_data( WP_PLUGIN_DIR . '/easy-digital-downloads/easy-digital-downloads.php', false, false );
+
+			if( $edd_plugin_data['Version'] < '1.6' ) {
+				echo '<div class="error"><p>' . sprintf( __( '%s requires Easy Digital Downloads Version 1.6 or greater. Please update Easy Digital Downloads.', 'edd-xero' ), $this->title ) . '</p></div>';
+			}
 
 		}
 
@@ -497,6 +540,9 @@ final class Plugify_EDD_Xero {
 		// Create oAuth object and send request
 		try {
 
+			// Load oauth lib
+			$this->load_oauth_lib();
+
 			// Create object and send to Xero
 			$XeroOAuth = new XeroOAuth( $this->xero_config );
 
@@ -531,6 +577,9 @@ final class Plugify_EDD_Xero {
 	private function get_invoice ( $invoice_number ) {
 
 		try {
+
+			// Load oauth lib
+			$this->load_oauth_lib();
 
 			// Get Invoice via Xero API
 			$XeroOAuth = new XeroOAuth( $this->xero_config );
@@ -579,6 +628,41 @@ final class Plugify_EDD_Xero {
 		}
 
 		return $valid;
+
+	}
+
+	/**
+	* Private helper function to load oauth lib when a request is about to be made to Xero
+	*
+	* @since 0.8
+	*
+	* @return void
+	*/
+	private function load_oauth_lib () {
+
+		// Don't load twice
+		if( class_exists( 'XeroOAuth' ) ) {
+			return;
+		}
+
+		// Load Xero PHP library
+		$path = trailingslashit( dirname( __FILE__ ) );
+
+		require_once $path . 'lib/oauth/_config.php';
+		require_once $path . 'lib/oauth/lib/OAuthSimple.php';
+		require_once $path . 'lib/oauth/lib/XeroOAuth.php';
+
+		$this->xero_config = array_merge (
+
+			array(
+				'application_type' => XRO_APP_TYPE,
+				'oauth_callback' => OAUTH_CALLBACK,
+				'user_agent' => 'Plugify-EDD-Xero'
+			),
+
+			$signatures
+
+		);
 
 	}
 
