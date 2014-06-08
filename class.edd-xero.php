@@ -21,7 +21,11 @@ final class Plugify_EDD_Xero {
 		$this->basename = 'edd-xero/init.php'; // Can't use plugin_basename etc as init.php is the activation file
 		$this->title = 'Easy Digital Downloads - Xero';
 
+		// Register hooks
 		$this->initialize();
+
+		// Setup languages
+		$this->load_textdomain();
 
 	}
 
@@ -134,6 +138,39 @@ final class Plugify_EDD_Xero {
 				echo '<div class="error"><p>' . sprintf( __( '%s requires Easy Digital Downloads Version 1.6 or greater. Please update Easy Digital Downloads.', 'edd-xero' ), $this->title ) . '</p></div>';
 			}
 
+		}
+
+	}
+
+	/**
+	* Load language files
+	*
+	* @since 0.1
+	*
+	* @return void
+	*/
+	public function load_textdomain() {
+
+		// Set filter for plugin's languages directory
+		$lang_dir = plugin_dir_path( __FILE__ ) . 'languages/';
+
+		// Traditional WordPress plugin locale filter
+		$locale = apply_filters( 'plugin_locale', get_locale(), 'edd-xero' );
+		$mofile = sprintf( '%1$s-%2$s.mo', 'edd-xero', $locale );
+
+		// Setup paths to current locale file
+		$mofile_local = $lang_dir . $mofile;
+		$mofile_global = WP_LANG_DIR . '/edd-xero/' . $mofile;
+
+		if ( file_exists( $mofile_global ) ) {
+			load_textdomain( 'edd-xero', $mofile_global );
+		}
+		elseif ( file_exists( $mofile_local ) ) {
+			load_textdomain( 'edd-xero', $mofile_local );
+		}
+		else {
+			// Load the default language files
+			load_plugin_textdomain( 'edd-xero', false, $lang_dir );
 		}
 
 	}
