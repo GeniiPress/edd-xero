@@ -1,0 +1,177 @@
+# Copyright (C) 2014 Easy Digital Downloads - Xero
+# This file is distributed under the same license as the Easy Digital Downloads - Xero package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Easy Digital Downloads - Xero 0.9\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/edd-xero\n"
+"POT-Creation-Date: 2014-06-08 08:09:43+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2014-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: class.edd-xero.php:123
+msgid ""
+"%s has been deactivated because it requires Easy Digital Downloads to be "
+"installed and activated"
+msgstr ""
+
+#: class.edd-xero.php:134
+msgid ""
+"%s requires Easy Digital Downloads Version 1.6 or greater. Please update "
+"Easy Digital Downloads."
+msgstr ""
+
+#: class.edd-xero.php:154
+msgid "Xero Settings"
+msgstr ""
+
+#: class.edd-xero.php:164
+msgid "Consumer Key"
+msgstr ""
+
+#: class.edd-xero.php:165
+msgid "The consumer key of your Xero application."
+msgstr ""
+
+#: class.edd-xero.php:170
+msgid "Consumer Secret"
+msgstr ""
+
+#: class.edd-xero.php:171
+msgid "The consumer secret of your Xero application."
+msgstr ""
+
+#: class.edd-xero.php:176
+msgid "Private Key"
+msgstr ""
+
+#: class.edd-xero.php:177
+msgid "Private key file (.pem)"
+msgstr ""
+
+#: class.edd-xero.php:182
+msgid "Public Key"
+msgstr ""
+
+#: class.edd-xero.php:183
+msgid "Public Key file (.cer)"
+msgstr ""
+
+#: class.edd-xero.php:272
+msgid "Xero invoice could not be created."
+msgstr ""
+
+#: class.edd-xero.php:307
+msgid "Looks like you need to configure your Xero settings!"
+msgstr ""
+
+#: class.edd-xero.php:318
+msgid "No associated invoice found"
+msgstr ""
+
+#: class.edd-xero.php:319
+msgid "Generate Invoice Now"
+msgstr ""
+
+#: class.edd-xero.php:339
+msgid "View in Xero"
+msgstr ""
+
+#: class.edd-xero.php:340
+msgid "Disassociate Invoice"
+msgstr ""
+
+#: class.edd-xero.php:371
+msgid "We could not get the invoice details"
+msgstr ""
+
+#: class.edd-xero.php:371
+msgid "Are your Xero settings configured correctly?"
+msgstr ""
+
+#: class.edd-xero.php:395
+msgid ""
+"Xero invoice could not be created. Please refresh the page and check Payment "
+"Notes."
+msgstr ""
+
+#: class.edd-xero.php:512
+msgid "Xero settings have not been configured"
+msgstr ""
+
+#: class.edd-xero.php:685
+msgid ""
+"Please supply the required details for Easy Digital Downloads - Xero to "
+"function."
+msgstr ""
+
+#: class.edd-xero.php:685
+msgid "If you need help, please follow the below list of instructions."
+msgstr ""
+
+#: class.edd-xero.php:688
+msgid "Login to"
+msgstr ""
+
+#: class.edd-xero.php:688
+msgid "using your usual Xero account"
+msgstr ""
+
+#: class.edd-xero.php:689
+msgid "Navigate to the"
+msgstr ""
+
+#: class.edd-xero.php:689
+msgid "tab"
+msgstr ""
+
+#: class.edd-xero.php:690
+msgid " Click \"Add Application\""
+msgstr ""
+
+#: class.edd-xero.php:691
+msgid "You should see an option for creating a Public or Private application."
+msgstr ""
+
+#: class.edd-xero.php:691
+msgid "Choose Private"
+msgstr ""
+
+#: class.edd-xero.php:693
+msgid ""
+"When you have created the application, copy and paste your Consumer Key and "
+"Consumer Secret in to the fields below"
+msgstr ""
+
+#: class.edd-xero.php:694
+msgid ""
+"After you have pasted in your Consumer Key and Consumer Secret, open your "
+"privatekey.pen and publickey.cer files and paste their contents in to the "
+"respective fields below"
+msgstr ""
+
+#: class.edd-xero.php:695
+msgid "Click Save Changes"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Easy Digital Downloads - Xero"
+msgstr ""
+
+#. #-#-#-#-#  edd-xero.pot (Easy Digital Downloads - Xero 0.9)  #-#-#-#-#
+#. Plugin URI of the plugin/theme
+#. #-#-#-#-#  edd-xero.pot (Easy Digital Downloads - Xero 0.9)  #-#-#-#-#
+#. Author URI of the plugin/theme
+msgid "https://plugify.io"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Integrate your Easy Digital Downloads store with your Xero account"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Plugify"
+msgstr ""
