@@ -18,7 +18,7 @@ final class Plugify_EDD_Xero {
 	public function __construct () {
 
 		// Setup vars
-		$this->basename = 'edd-xero/init.php'; // Can't use plugin_basename etc as init.php is the activation file
+		$this->basename = 'edd-xero/edd-xero.php'; // Can't use plugin_basename etc as edd-xero.php is the activation file
 		$this->title = 'Easy Digital Downloads - Xero';
 
 		// Register hooks
