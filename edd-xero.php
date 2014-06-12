@@ -33,7 +33,9 @@ if( !class_exists( 'Plugify_EDD_Xero' ) ) {
 }
 
 // Before core plugin loads, instantiate the EDD license
-new EDD_License( __FILE__, 'Easy Digital Downloads - Xero', '1.0', 'Plugify Plugins' );
+if( class_exists( 'EDD_License' ) ) {
+	new EDD_License( __FILE__, 'EDD Xero', '1.0', 'Plugify Plugins' );
+}
 
 // Boot Plugify Xero integration for EDD
 new Plugify_EDD_Xero();
