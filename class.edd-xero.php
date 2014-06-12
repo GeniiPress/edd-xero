@@ -134,8 +134,8 @@ final class Plugify_EDD_Xero {
 			// If EDD is installed but version is too low, display a notice
 			$edd_plugin_data = get_plugin_data( WP_PLUGIN_DIR . '/easy-digital-downloads/easy-digital-downloads.php', false, false );
 
-			if( $edd_plugin_data['Version'] < '1.6' ) {
-				echo '<div class="error"><p>' . sprintf( __( '%s requires Easy Digital Downloads Version 1.6 or greater. Please update Easy Digital Downloads.', 'edd-xero' ), $this->title ) . '</p></div>';
+			if( $edd_plugin_data['Version'] < '1.9' ) {
+				echo '<div class="error"><p>' . sprintf( __( '%s requires Easy Digital Downloads Version 1.9 or greater. Please update Easy Digital Downloads.', 'edd-xero' ), $this->title ) . '</p></div>';
 			}
 
 		}
