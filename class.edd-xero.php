@@ -219,7 +219,22 @@ final class Plugify_EDD_Xero {
 				'name' => __( 'Public Key', 'edd-xero' ),
 				'desc' => __( 'Public Key file (.cer)', 'edd-xero' ),
 				'type' => 'textarea'
-			)
+			),
+			'xero_settings_behaviour' => array(
+				'id' => 'xero_settings_behaviour',
+				'name' => __( 'Xero behaviour', 'edd-xero' ),
+				'type' => 'header'
+			),
+			'invoice_status' => array(
+				'id' => 'invoice_status',
+				'name' => __( 'Default Invoice Status', 'edd-xero' ),
+				'type' => 'select',
+				'options' => array(
+					'DRAFT' => 'Draft',
+					'SUBMITTED' => 'Submitted for Approval',
+					'AUTHORISED' => 'Authorised'
+				)
+			),
 		);
 
 		return array_merge( $edd_settings, $settings );
@@ -503,6 +518,9 @@ final class Plugify_EDD_Xero {
 		$payment = edd_get_payment_meta( $payment_id );
 		$cart = edd_get_payment_meta_cart_details( $payment_id );
 
+		// Get plugin settings
+		$settings = edd_get_settings();
+
 		if( is_array( $payment['user_info'] ) ) {
 			$contact = $payment['user_info'];
 		}
@@ -539,6 +557,11 @@ final class Plugify_EDD_Xero {
 					'total' => $line_item['price']
 				) ) );
 
+			}
+
+			// Set invoice status
+			if( isset( $settings['invoice_status'] ) && !empty( $settings['invoice_status'] ) ) {
+				$invoice->set_status( $settings['invoice_status'] );
 			}
 
 			// Send the invoice to Xero

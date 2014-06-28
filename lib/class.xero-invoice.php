@@ -8,6 +8,7 @@ class Xero_Invoice extends Xero_Resource {
 	private $_date = '';
 	private $_due_date = '';
 	private $_line_amount_types = '';
+	private $_status = 'DRAFT';
 
 	private $_line_items = array();
 
@@ -20,6 +21,29 @@ class Xero_Invoice extends Xero_Resource {
 	*/
 	public function __construct () {
 
+
+	}
+
+	/**
+	* Change the status of an invoice.
+	*
+	* @since 1.0
+	*
+	* @param string $new_status The new status of the invoice. Must be either "DRAFT", "SUBMITTED" or "AUTHORISED"
+	* @return void
+	*/
+	public function set_status ( $new_status ) {
+
+		// Invoice statuses that Xero supports. $new_status must match one of these
+		$statuses = array( 'DRAFT', 'SUBMITTED', 'AUTHORISED' );
+
+		// Ensure specified status is valid
+		if( in_array( $new_status, $statuses ) ){
+			return $this->_status = $new_status;
+		}
+		else {
+			return false;
+		}
 
 	}
 
@@ -97,6 +121,9 @@ class Xero_Invoice extends Xero_Resource {
 
 		// Get <Contact>...</Contact> XML
 		$_[] = $this->_contact->get_xml();
+
+		// Set status
+		$_[] = '<Status>' . $this->_status . '</Status>';
 
 		// Set dates
 		$_[] = '<Date>' . $this->_date . '</Date>';
