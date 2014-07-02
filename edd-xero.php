@@ -20,7 +20,8 @@ $inits = array(
 	'Xero_Resource' => $path . 'lib/class.xero-resource.php',
 	'Xero_Contact' => $path . 'lib/class.xero-contact.php',
 	'Xero_Invoice' => $path . 'lib/class.xero-invoice.php',
-	'Xero_Line_Item' => $path . 'lib/class.xero-line-item.php'
+	'Xero_Line_Item' => $path . 'lib/class.xero-line-item.php',
+	'Xero_Payment' => $path . 'lib/class.xero-payment.php'
 );
 
 foreach( $inits as $class => $file ) {

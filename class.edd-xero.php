@@ -43,6 +43,8 @@ final class Plugify_EDD_Xero {
 		// Setup actions for invoice creation success/fail
 		add_action( 'edd_xero_invoice_creation_success', array( &$this, 'xero_invoice_success' ), 99, 4 );
 		add_action( 'edd_xero_invoice_creation_fail', array( &$this, 'xero_invoice_fail' ), 10, 4 );
+		add_action( 'edd_xero_payment_success', array( &$this, 'xero_payment_success' ), 10, 3 );
+		add_action( 'edd_xero_payment_fail', array( &$this, 'xero_payment_fail' ), 10, 3 );
 
 		// Action for displaying Xero 'metabox' on payment details page
 		add_action( 'edd_view_order_details_sidebar_after', array( &$this, 'xero_invoice_metabox' ) );
@@ -235,6 +237,16 @@ final class Plugify_EDD_Xero {
 					'AUTHORISED' => 'Authorised'
 				)
 			),
+			'invoice_payments' => array(
+				'id' => 'invoice_payments',
+				'name' => __( 'Automatically apply a payment to generated invoices', 'edd-xero' ),
+				'type' => 'checkbox'
+			),
+			'payments_account' => array(
+				'id' => 'payments_account',
+				'name' => __( 'Code of account which tracks payments', 'edd-xero' ),
+				'type' => 'text'
+			)
 		);
 
 		return array_merge( $edd_settings, $settings );
@@ -284,7 +296,33 @@ final class Plugify_EDD_Xero {
 	* @param int $payment_id ID of EDD Payment
 	* @return void
 	*/
-	public static function xero_invoice_success ( $invoice, $invoice_number, $invoice_id, $payment_id ) {
+	public function xero_payment_success( $xero_payment, $response, $payment_id ) {
+
+		// Add a success note to the payment
+		edd_insert_payment_note( $payment_id, __( 'Payment was successfully applied to Xero invoice.', 'edd-xero' ) );
+
+	}
+
+	public function xero_payment_fail( $xero_payment, $response, $payment_id ) {
+
+		// Add a failure notice to the payment
+		edd_insert_payment_note( $payment_id, __( 'Payment could not be applied to Xero invoice. ' . $response->Elements->DataContractBase->ValidationErrors->ValidationError[0]->Message, 'edd-xero' ) );
+
+	}
+
+	/**
+	* Leverage the Xero invoice creation success action to save critical invoice data such as Number and ID as meta
+	* against the EDD Payment whenever an invoice is generated
+	*
+	* @since 0.1
+	*
+	* @param Xero_Invoice $invoice Xero_Invoice object of newly generated invoice
+	* @param string $invoice_number Number of Xero invoice as automatically assigned by Xero. EG, "INV-123"
+	* @param guid $invoice_id Unique ID of invoice as in Xero. EG "851b2f09-36f8-4df8-a32e-da8c4c451ff0"
+	* @param int $payment_id ID of EDD Payment
+	* @return void
+	*/
+	public function xero_invoice_success ( $invoice, $invoice_number, $invoice_id, $payment_id ) {
 
 		// Save invoice number and ID locally
 		update_post_meta( $payment_id, '_edd_payment_xero_invoice_number', $invoice_number );
@@ -292,6 +330,14 @@ final class Plugify_EDD_Xero {
 
 		// Insert a note on the payment informing the merchant Xero invoice generation was successful
 		edd_insert_payment_note( $payment_id, __( 'Xero invoice ' . $invoice_number . ' successfully created', 'edd-xero' ) );
+
+		// If automatic payment application is turned on, do just that!
+		$settings = edd_get_settings();
+
+		// If automatic payments are turned on, do eeet!
+		if( $settings['invoice_payments'] ) {
+			$this->create_payment( $invoice_id, $payment_id );
+		}
 
 	}
 
@@ -306,7 +352,7 @@ final class Plugify_EDD_Xero {
 	* @param string $custom_message (optional) Allow a developer to pass in the error message they want written on the EDD payment note
 	* @return void
 	*/
-	public static function xero_invoice_fail ( $invoice, $payment_id, $error_obj = null, $custom_message = null ) {
+	public function xero_invoice_fail ( $invoice, $payment_id, $error_obj = null, $custom_message = null ) {
 
 		$postfix = null;
 
@@ -500,6 +546,97 @@ final class Plugify_EDD_Xero {
 		$return['Contact']['Email'] = (string)$invoice_tag->Invoice->Contact->EmailAddress;
 
 		return $return;
+
+	}
+
+	/**
+	* Apply a payment to a Xero invoice
+	*
+	* @since 1.0
+	*
+	* @param string $invoice_id ID of Xero invoice. NOT the number, looks like an MD5 hash, not the "pretty" ID
+	* @param int $payment_id EDD payment ID this payment will be mirroring
+	* @return void
+	*/
+	public function create_payment ( $invoice_id, $payment_id ) {
+
+		// Get EDD payment again so we can grab the correct amount
+		if( $payment = edd_get_payment_meta( $payment_id ) ) {
+
+			// Get total for order
+			$subtotal = edd_get_payment_subtotal( $payment_id, false );
+			$tax 			= edd_get_payment_tax( $payment_id, false );
+			$total		= $subtotal + $tax;
+
+			// Get EDD settings
+			$settings = edd_get_settings();
+
+			// Build Xero_Payment object
+			$xero_payment = new Xero_Payment( array(
+				'invoice_id' => $invoice_id,
+				'account_code' => $settings['payments_account'],
+				'date' => date( 'Y-m-d', strtotime( $payment['date'] ) ),
+				'amount' => $total
+			) );
+
+			// Send the invoice to Xero
+			if( $this->settings_are_valid () ) {
+				return $this->put_payment( $xero_payment, $payment_id );
+			}
+			else {
+				do_action( 'edd_xero_payment_fail', $xero_payment, $payment, NULL, __( 'Xero settings have not been configured', 'edd-xero' ) );
+			}
+
+		}
+		else {
+			do_action( 'edd_xero_payment_fail', __( 'Could not apply payment to invoice. EDD payment data not available.', 'edd-xero' ) );
+		}
+
+	}
+
+	/**
+	* Send a payment to Xero
+	*
+	* @since 0.1
+	*
+	* @param Xero_Invoice $invoice Xero_Payment object which contains payment data, which will be applied to the invoice
+	* @return SimpleXMLObject
+	*/
+	private function put_payment ( $xero_payment, $payment_id ) {
+
+		// Abort if a Xero_Invoice object was not passed
+		if( !( $xero_payment instanceof Xero_Payment ) )
+			return false;
+
+		// Prepare payload and API endpoint URL
+		$xml = $xero_payment->get_xml();
+
+		// Create oAuth object and send request
+		try {
+
+			// Load oauth lib
+			$this->load_oauth_lib();
+
+			// Create object and send to Xero
+			$XeroOAuth = new XeroOAuth( $this->xero_config );
+
+			$request = $XeroOAuth->request( 'PUT', $XeroOAuth->url( 'Payments', 'core' ), array(), $xml );
+			$response = $XeroOAuth->parseResponse( $request['response'] ,'xml' );
+
+			// Parse the response from Xero and fire appropriate actions
+			if( $request['code'] == 200 ) {
+				do_action( 'edd_xero_payment_success', $xero_payment, $response, $payment_id );
+			}
+			else {
+				do_action( 'edd_xero_payment_fail', $xero_payment, $response, $payment_id );
+			}
+
+			return $response;
+
+		}
+		catch( Exception $e ) {
+			do_action( 'edd_xero_payment_fail', $xero_payment, $response, $e );
+		}
 
 	}
 
