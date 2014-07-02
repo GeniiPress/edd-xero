@@ -539,6 +539,14 @@ final class Plugify_EDD_Xero {
 			$invoice->set_date( $time );
 			$invoice->set_due_date( $time );
 
+			// Set the currency code as per EDD settings
+			if( '' != $payment['currency'] ) {
+				$invoice->set_currency_code( $payment['currency'] );
+			}
+			else {
+				// Do nothing.. Xero will automatically assign a currency. Good fallback if the above fails.
+			}
+
 			// Set contact (invoice recipient) details
 			$invoice->set_contact( new Xero_Contact( array(
 				'first_name' => $contact['first_name'],

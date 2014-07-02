@@ -8,6 +8,7 @@ class Xero_Invoice extends Xero_Resource {
 	private $_date = '';
 	private $_due_date = '';
 	private $_line_amount_types = '';
+	private $_currency_code = '';
 	private $_status = 'DRAFT';
 
 	private $_line_items = array();
@@ -45,6 +46,18 @@ class Xero_Invoice extends Xero_Resource {
 			return false;
 		}
 
+	}
+
+	/**
+	* Change the currency code of this invoice.
+	*
+	* @since 1.0
+	*
+	* @param string $new_status The new status of the invoice. Must be either "DRAFT", "SUBMITTED" or "AUTHORISED"
+	* @return void
+	*/
+	public function set_currency_code ( $new_currency_code ) {
+		$this->_currency_code = $new_currency_code;
 	}
 
 	/**
@@ -124,6 +137,11 @@ class Xero_Invoice extends Xero_Resource {
 
 		// Set status
 		$_[] = '<Status>' . $this->_status . '</Status>';
+
+		// Set currency code if applicable
+		if( !empty( $this->_currency_code ) ) {
+			$_[] = '<CurrencyCode>' . $this->_currency_code . '</CurrencyCode>';
+		}
 
 		// Set dates
 		$_[] = '<Date>' . $this->_date . '</Date>';
