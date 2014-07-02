@@ -71,7 +71,7 @@ jQuery(document).ready( function($) {
 		if( confirm( 'Are you SURE you want to generate a NEW invoice in Xero?' ) ) {
 
 			if( payment_id <= 0 ) {
-				alert('There was a problem creating the invoice. Please refresh and try again.');
+				alert('There was a problem creating the invoice. Please refresh to check Payment Notes and try again.');
 				return false;
 			}
 
@@ -113,7 +113,7 @@ jQuery(document).ready( function($) {
 
 				},
 				error: function() {
-					alert('There was a problem generating the invoice. Please try again.');
+					alert('There was a problem generating the invoice. Please check Payment Notes and try again.');
 					button.show();
 					invoice_content.hide();
 				}
@@ -156,7 +156,7 @@ jQuery(document).ready( function($) {
 					}
 					else {
 						button.text('Disassociate Invoice');
-						alert('There was a problem disassociating the invoice. Please try again.');
+						alert('There was a problem disassociating the invoice. Please check Payment Notes and try again.');
 					}
 
 					button.remove();
@@ -164,7 +164,7 @@ jQuery(document).ready( function($) {
 				},
 				error: function() {
 					button.text('Disassociate Invoice');
-					alert('There was a problem disassociating the invoice. Please try again.');
+					alert('There was a problem disassociating the invoice. Please check Payment Notes and try again.');
 				}
 			});
 
