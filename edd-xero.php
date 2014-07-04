@@ -4,7 +4,7 @@ Plugin Name: Easy Digital Downloads - Xero
 Plugin URI: https://plugify.io
 Description: Integrate your Easy Digital Downloads store with your Xero account
 Author: Plugify
-Version: 1.0
+Version: 1.1
 Author URI: https://plugify.io
 */
 
@@ -34,7 +34,7 @@ if( !class_exists( 'Plugify_EDD_Xero' ) ) {
 
 // Before core plugin loads, instantiate the EDD license
 if( class_exists( 'EDD_License' ) ) {
-	new EDD_License( __FILE__, 'EDD Xero', '1.0', 'Plugify Plugins' );
+	new EDD_License( __FILE__, 'EDD Xero', '1.1', 'Plugify Plugins' );
 }
 
 // Boot Plugify Xero integration for EDD
