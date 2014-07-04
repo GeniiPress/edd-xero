@@ -1,195 +1,237 @@
-# Copyright (C) 2014 Easy Digital Downloads - Xero
-# This file is distributed under the same license as the Easy Digital Downloads - Xero package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Easy Digital Downloads - Xero 0.9\n"
-"Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/edd-xero\n"
-"POT-Creation-Date: 2014-06-10 10:34:09+00:00\n"
+"Project-Id-Version: EDD Xero\n"
+"POT-Creation-Date: 2014-07-04 10:07+0800\n"
+"PO-Revision-Date: 2014-07-04 10:07+0800\n"
+"Last-Translator: Plugify Plugins <hello@plugify.io>\n"
+"Language-Team: Plugify Plugins <hello@plugify.io>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2014-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"X-Generator: Poedit 1.5.7\n"
+"X-Poedit-KeywordsList: _;gettext;gettext_noop;__;_e\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: /Users/lukerollans/www/plugify-dev/wp-content/plugins/"
+"edd-xero\n"
 
-#: class.edd-xero.php:127
+#: class.edd-xero.php:129
+#, php-format
 msgid ""
 "%s has been deactivated because it requires Easy Digital Downloads to be "
 "installed and activated"
 msgstr ""
 
-#: class.edd-xero.php:138
+#: class.edd-xero.php:140
+#, php-format
 msgid ""
-"%s requires Easy Digital Downloads Version 1.6 or greater. Please update "
+"%s requires Easy Digital Downloads Version 1.9 or greater. Please update "
 "Easy Digital Downloads."
 msgstr ""
 
-#: class.edd-xero.php:191
-msgid "Xero Settings"
+#: class.edd-xero.php:193
+msgid "Xero behaviour"
 msgstr ""
 
-#: class.edd-xero.php:201
+#: class.edd-xero.php:198
+msgid "Invoice Status"
+msgstr ""
+
+#: class.edd-xero.php:200
+msgid "Created invoices as Draft, Submitted or Authorised"
+msgstr ""
+
+#: class.edd-xero.php:209
+msgid "Auto Send Invoices"
+msgstr ""
+
+#: class.edd-xero.php:210
+msgid "When an invoice is created, automatically apply the associated payment"
+msgstr ""
+
+#: class.edd-xero.php:215
+msgid "Sales Account"
+msgstr ""
+
+#: class.edd-xero.php:216
+msgid "Code for Xero account which tracks sales"
+msgstr ""
+
+#: class.edd-xero.php:222
+msgid "Payment Account"
+msgstr ""
+
+#: class.edd-xero.php:223
+msgid "Code for Xero account which tracks received payments"
+msgstr ""
+
+#: class.edd-xero.php:229
+msgid "Xero Application Settings"
+msgstr ""
+
+#: class.edd-xero.php:234
+msgid "Xero Setup Instructions"
+msgstr ""
+
+#: class.edd-xero.php:239
 msgid "Consumer Key"
 msgstr ""
 
-#: class.edd-xero.php:202
+#: class.edd-xero.php:240
 msgid "The consumer key of your Xero application."
 msgstr ""
 
-#: class.edd-xero.php:207
+#: class.edd-xero.php:245
 msgid "Consumer Secret"
 msgstr ""
 
-#: class.edd-xero.php:208
+#: class.edd-xero.php:246
 msgid "The consumer secret of your Xero application."
 msgstr ""
 
-#: class.edd-xero.php:213
+#: class.edd-xero.php:251
 msgid "Private Key"
 msgstr ""
 
-#: class.edd-xero.php:214
+#: class.edd-xero.php:252
 msgid "Private key file (.pem)"
 msgstr ""
 
-#: class.edd-xero.php:219
+#: class.edd-xero.php:257
 msgid "Public Key"
 msgstr ""
 
-#: class.edd-xero.php:220
+#: class.edd-xero.php:258
 msgid "Public Key file (.cer)"
 msgstr ""
 
-#: class.edd-xero.php:309
+#: class.edd-xero.php:313
+msgid "Payment was successfully applied to Xero invoice"
+msgstr ""
+
+#: class.edd-xero.php:320
+msgid "Payment could not be applied to Xero invoice. "
+msgstr ""
+
+#: class.edd-xero.php:343
+msgid "Xero invoice "
+msgstr ""
+
+#: class.edd-xero.php:381
 msgid "Xero invoice could not be created."
 msgstr ""
 
-#: class.edd-xero.php:344
+#: class.edd-xero.php:382
+msgid " Xero said: "
+msgstr ""
+
+#: class.edd-xero.php:416
 msgid "Looks like you need to configure your Xero settings!"
 msgstr ""
 
-#: class.edd-xero.php:355
+#: class.edd-xero.php:417
+msgid "You can <a href=\""
+msgstr ""
+
+#: class.edd-xero.php:427
 msgid "No associated invoice found"
 msgstr ""
 
-#: class.edd-xero.php:356
+#: class.edd-xero.php:428
 msgid "Generate Invoice Now"
 msgstr ""
 
-#: class.edd-xero.php:376
+#: class.edd-xero.php:448
 msgid "View in Xero"
 msgstr ""
 
-#: class.edd-xero.php:377
+#: class.edd-xero.php:449
 msgid "Disassociate Invoice"
 msgstr ""
 
-#: class.edd-xero.php:408
+#: class.edd-xero.php:480
 msgid "We could not get the invoice details"
 msgstr ""
 
-#: class.edd-xero.php:408
+#: class.edd-xero.php:480
 msgid "Are your Xero settings configured correctly?"
 msgstr ""
 
-#: class.edd-xero.php:432
+#: class.edd-xero.php:504
 msgid ""
 "Xero invoice could not be created. Please refresh the page and check Payment "
 "Notes."
 msgstr ""
 
-#: class.edd-xero.php:549
+#: class.edd-xero.php:598
+#: class.edd-xero.php:729
 msgid "Xero settings have not been configured"
 msgstr ""
 
-#: class.edd-xero.php:722
+#: class.edd-xero.php:603
+msgid "Could not apply payment to invoice. EDD payment data not available."
+msgstr ""
+
+#: class.edd-xero.php:902
 msgid ""
 "Please supply the required details for Easy Digital Downloads - Xero to "
 "function."
 msgstr ""
 
-#: class.edd-xero.php:722
+#: class.edd-xero.php:902
 msgid "If you need help, please follow the below list of instructions."
 msgstr ""
 
-#: class.edd-xero.php:725
+#: class.edd-xero.php:905
 msgid "Login to"
 msgstr ""
 
-#: class.edd-xero.php:725
+#: class.edd-xero.php:905
 msgid "using your usual Xero account"
 msgstr ""
 
-#: class.edd-xero.php:726
+#: class.edd-xero.php:906
 msgid "Navigate to the"
 msgstr ""
 
-#: class.edd-xero.php:726
+#: class.edd-xero.php:906
 msgid "tab"
 msgstr ""
 
-#: class.edd-xero.php:727
+#: class.edd-xero.php:907
 msgid " Click \"Add Application\""
 msgstr ""
 
-#: class.edd-xero.php:728
+#: class.edd-xero.php:908
 msgid "You should see an option for creating a Public or Private application."
 msgstr ""
 
-#: class.edd-xero.php:728
+#: class.edd-xero.php:908
 msgid "Choose Private"
 msgstr ""
 
-#: class.edd-xero.php:729
+#: class.edd-xero.php:909
 msgid "The next step is a bit tricky"
 msgstr ""
 
-#: class.edd-xero.php:729
+#: class.edd-xero.php:909
 msgid ""
 "Please follow Xero's documentation here on creating a Private Xero "
 "Application"
 msgstr ""
 
-#: class.edd-xero.php:730
+#: class.edd-xero.php:910
 msgid ""
 "When you have created the application, copy and paste your Consumer Key and "
 "Consumer Secret in to the fields below"
 msgstr ""
 
-#: class.edd-xero.php:731
+#: class.edd-xero.php:911
 msgid ""
 "After you have pasted in your Consumer Key and Consumer Secret, open your "
 "privatekey.pen and publickey.cer files and paste their contents in to the "
 "respective fields below"
 msgstr ""
 
-#: class.edd-xero.php:732
+#: class.edd-xero.php:912
 msgid "Click Save Changes"
-msgstr ""
-
-#: lib/includes/EDD_License_Handler.php:125
-msgid "%1$s License Key"
-msgstr ""
-
-#: lib/includes/EDD_License_Handler.php:251
-msgid "Deactivate License"
-msgstr ""
-
-#. Plugin Name of the plugin/theme
-msgid "Easy Digital Downloads - Xero"
-msgstr ""
-
-#. #-#-#-#-#  edd-xero.pot (Easy Digital Downloads - Xero 0.9)  #-#-#-#-#
-#. Plugin URI of the plugin/theme
-#. #-#-#-#-#  edd-xero.pot (Easy Digital Downloads - Xero 0.9)  #-#-#-#-#
-#. Author URI of the plugin/theme
-msgid "https://plugify.io"
-msgstr ""
-
-#. Description of the plugin/theme
-msgid "Integrate your Easy Digital Downloads store with your Xero account"
-msgstr ""
-
-#. Author of the plugin/theme
-msgid "Plugify"
 msgstr ""

@@ -231,7 +231,7 @@ final class Plugify_EDD_Xero {
 			),
 			'xero_settings_description' => array(
 				'id' => 'xero_settings_description',
-				'name' => __( '', 'edd-xero' ),
+				'name' => __( 'Xero Setup Instructions', 'edd-xero' ),
 				'type' => 'description'
 			),
 			'consumer_key' => array(
