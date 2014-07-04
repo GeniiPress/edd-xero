@@ -9,8 +9,8 @@ class Xero_Line_Item extends Xero_Resource {
 	private $_unitamount = 0;
 	private $_tax = 0;
 	private $_total = 0;
+	private $_accountcode = 0;
 
-	private $_accountcode = 200;
 
 	/**
 	* Xero_Line_Item constructor. Takes instantiation array as only parameter and returns self
@@ -29,6 +29,7 @@ class Xero_Line_Item extends Xero_Resource {
 			$this->_unitamount = $initialize['unitamount'];
 			$this->_tax = $initialize['tax'];
 			$this->_total = $initialize['total'];
+			$this->_accountcode = $initialize['accountcode'];
 
 			return $this;
 
@@ -60,8 +61,8 @@ class Xero_Line_Item extends Xero_Resource {
 		// Unit amount (price)
 		$_[] = '<UnitAmount>' . $this->_unitamount . '</UnitAmount>';
 
-		// Line amount. Total cost of all of this item exclusive of tax
-		$_[] = '<LineAmount>' . round( $this->_unitamount * $this->_quantity ) . '</LineAmount>';
+		// Unit tax
+		$_[] = '<TaxAmount>' . $this->_tax . '</TaxAmount>';
 
 		// Account code
 		$_[] = '<AccountCode>' . $this->_accountcode . '</AccountCode>';

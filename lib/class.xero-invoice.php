@@ -155,7 +155,7 @@ class Xero_Invoice extends Xero_Resource {
 		}
 
 		$_[] = '</LineItems>';
-		$_[] = '<LineAmountTypes>Inclusive</LineAmountTypes>';
+		$_[] = '<LineAmountTypes>Exclusive</LineAmountTypes>';
 
 		// Close <Invoice> tag
 		$_[] = '</Invoice>';

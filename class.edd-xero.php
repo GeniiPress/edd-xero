@@ -188,9 +188,45 @@ final class Plugify_EDD_Xero {
 	public static function edd_xero_register_settings ( $edd_settings ) {
 
 		$settings = array(
+			'xero_settings_behaviour' => array(
+				'id' => 'xero_settings_behaviour',
+				'name' => __( 'Xero behaviour', 'edd-xero' ),
+				'type' => 'header'
+			),
+			'invoice_status' => array(
+				'id' => 'invoice_status',
+				'name' => __( 'Invoice Status', 'edd-xero' ),
+				'type' => 'select',
+				'desc' => __( 'Created invoices as Draft, Submitted or Authorised', 'edd-xero' ),
+				'options' => array(
+					'DRAFT' => 'Draft',
+					'SUBMITTED' => 'Submitted for Approval',
+					'AUTHORISED' => 'Authorised'
+				)
+			),
+			'invoice_payments' => array(
+				'id' => 'invoice_payments',
+				'name' => __( 'Auto Send Invoices', 'edd-xero' ),
+				'desc' => __( 'When an invoice is created, automatically apply the associated payment', 'edd-xero' ),
+				'type' => 'checkbox'
+			),
+			'sales_account' => array(
+				'id' => 'sales_account',
+				'name' => __( 'Sales Account', 'edd-xero' ),
+				'desc' => __( 'Code for Xero account which tracks sales', 'edd-xero' ),
+				'class' => 'small-text',
+				'type' => 'text'
+			),
+			'payments_account' => array(
+				'id' => 'payments_account',
+				'name' => __( 'Payment Account', 'edd-xero' ),
+				'desc' => __( 'Code for Xero account which tracks received payments', 'edd-xero' ),
+				'class' => 'small-text',
+				'type' => 'text'
+			),
 			'xero_settings_header' => array(
 				'id' => 'xero_settings_header',
-				'name' => __( 'Xero Settings', 'edd-xero' ),
+				'name' => __( 'Xero Application Settings', 'edd-xero' ),
 				'type' => 'header'
 			),
 			'xero_settings_description' => array(
@@ -221,31 +257,6 @@ final class Plugify_EDD_Xero {
 				'name' => __( 'Public Key', 'edd-xero' ),
 				'desc' => __( 'Public Key file (.cer)', 'edd-xero' ),
 				'type' => 'textarea'
-			),
-			'xero_settings_behaviour' => array(
-				'id' => 'xero_settings_behaviour',
-				'name' => __( 'Xero behaviour', 'edd-xero' ),
-				'type' => 'header'
-			),
-			'invoice_status' => array(
-				'id' => 'invoice_status',
-				'name' => __( 'Default Invoice Status', 'edd-xero' ),
-				'type' => 'select',
-				'options' => array(
-					'DRAFT' => 'Draft',
-					'SUBMITTED' => 'Submitted for Approval',
-					'AUTHORISED' => 'Authorised'
-				)
-			),
-			'invoice_payments' => array(
-				'id' => 'invoice_payments',
-				'name' => __( 'Automatically apply a payment to generated invoices', 'edd-xero' ),
-				'type' => 'checkbox'
-			),
-			'payments_account' => array(
-				'id' => 'payments_account',
-				'name' => __( 'Code of account which tracks payments', 'edd-xero' ),
-				'type' => 'text'
 			)
 		);
 
@@ -299,7 +310,7 @@ final class Plugify_EDD_Xero {
 	public function xero_payment_success( $xero_payment, $response, $payment_id ) {
 
 		// Add a success note to the payment
-		edd_insert_payment_note( $payment_id, __( 'Payment was successfully applied to Xero invoice.', 'edd-xero' ) );
+		edd_insert_payment_note( $payment_id, __( 'Payment was successfully applied to Xero invoice', 'edd-xero' ) );
 
 	}
 
@@ -699,7 +710,8 @@ final class Plugify_EDD_Xero {
 					'quantity' => $line_item['quantity'],
 					'unitamount' => $line_item['item_price'],
 					'tax' => $line_item['tax'],
-					'total' => $line_item['price']
+					'total' => $line_item['price'],
+					'accountcode' => $settings['sales_account']
 				) ) );
 
 			}
