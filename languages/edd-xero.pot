@@ -41,7 +41,7 @@ msgid "Created invoices as Draft, Submitted or Authorised"
 msgstr ""
 
 #: class.edd-xero.php:209
-msgid "Auto Send Invoices"
+msgid "Auto Send Payments"
 msgstr ""
 
 #: class.edd-xero.php:210
