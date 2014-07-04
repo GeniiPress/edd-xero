@@ -206,7 +206,7 @@ final class Plugify_EDD_Xero {
 			),
 			'invoice_payments' => array(
 				'id' => 'invoice_payments',
-				'name' => __( 'Auto Send Invoices', 'edd-xero' ),
+				'name' => __( 'Auto Send Payments', 'edd-xero' ),
 				'desc' => __( 'When an invoice is created, automatically apply the associated payment', 'edd-xero' ),
 				'type' => 'checkbox'
 			),
