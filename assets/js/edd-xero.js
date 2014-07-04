@@ -15,7 +15,7 @@ jQuery(document).ready( function($) {
 
 		markup += '<span class="label">Status:</span> <span class="right">' + data.Status + '</span><br />';
 		markup += '<span class="label">Total:</span> <span class="right">' + data.Total + ' ' + data.CurrencyCode + '</span><br />';
-		markup += '<span class="label">Tax:</span> <span class="right">' + data.TotalTax + ' ' + data.CurrencyCode + '</span><br />';
+		markup += '<span class="label">Inclusive Tax:</span> <span class="right">' + data.TotalTax + ' ' + data.CurrencyCode + '</span><br />';
 		markup += '<span class="label">Contact:</span> <span class="right">' + data.Contact.Name + '</span><br />';
 		markup += '<span class="label">Email:</span> <span class="right">' + data.Contact.Email + '</span>';
 
