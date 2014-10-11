@@ -716,6 +716,25 @@ final class Plugify_EDD_Xero {
 
 			}
 
+			// Add fees to invoice if they exist
+			if( isset( $payment['fees'] ) && !empty( $payment['fees'] ) ) {
+
+				foreach( $payment['fees'] as $fee ) {
+
+					// Add fee line item to invoice
+					$invoice->add( new Xero_Line_Item( array(
+						'description' => $fee['label'],
+						'quantity' => 1,
+						'total' => $fee['amount'],
+						'unitamount' => $fee['amount'],
+						'tax' => 0,
+						'accountcode' => $settings['sales_account']
+					) ) );
+
+				}
+
+			}
+
 			// Set invoice status
 			if( isset( $settings['invoice_status'] ) && !empty( $settings['invoice_status'] ) ) {
 				$invoice->set_status( $settings['invoice_status'] );
