@@ -1,6 +1,6 @@
 # [Easy Digital Downloads - Xero](https://plugify.io)
 
-Love Xero(https://www.xero.com)? Love selling stuff on your WordPress site with Easy Digital Downloads(http://easydigitaldownloads.com)? Combining the two seems like a no brainer.
+[Love Xero](https://www.xero.com)? Love selling stuff on your WordPress site with [Easy Digital Downloads](http://easydigitaldownloads.com)? Combining the two seems like a no brainer.
 
 Xero for Easy Digital Downloads will automatically create invoices and customers in Xero whenever a purchase is made on your store.
 
