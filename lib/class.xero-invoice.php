@@ -4,6 +4,7 @@
 
 class Xero_Invoice extends Xero_Resource {
 
+	private $_invoicenumber = '';
 	private $_contact = '';
 	private $_date = '';
 	private $_due_date = '';
@@ -23,6 +24,18 @@ class Xero_Invoice extends Xero_Resource {
 	public function __construct () {
 
 
+	}
+
+	/**
+	* Manually specify an invoice number, instead of letting Xero automatically generate one
+	*
+	* @since 1.1
+	*
+	* @param string $invoice_number The invoice number of the invoice. Ideally a prefix with a sequential number. EG, EDD-1234
+	* @return string
+	*/
+	public function set_invoice_number ( $invoice_number ) {
+		$this->_invoicenumber = $invoice_number;
 	}
 
 	/**
@@ -131,6 +144,11 @@ class Xero_Invoice extends Xero_Resource {
 		// Open Invoice element and set as a sales invoice
 		$_[] = '<Invoice>';
 		$_[] = '<Type>ACCREC</Type>';
+
+		// Set <InvoiceNumber> if it has been manually specified. If not, Xero will automatically generate it
+		if ( '' != $this->_invoicenumber ) {
+			$_[] = '<InvoiceNumber>' . $this->_invoicenumber . '</InvoiceNumber>';
+		}
 
 		// Get <Contact>...</Contact> XML
 		$_[] = $this->_contact->get_xml();

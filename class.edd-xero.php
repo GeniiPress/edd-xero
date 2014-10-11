@@ -687,6 +687,9 @@ final class Plugify_EDD_Xero {
 			$invoice->set_date( $time );
 			$invoice->set_due_date( $time );
 
+			// Apply invoice number filter
+			$invoice->set_invoice_number( apply_filters( 'edd_xero_invoice_number', '', $payment_id, $payment ) );
+
 			// Set the currency code as per EDD settings
 			if( '' != $payment['currency'] ) {
 				$invoice->set_currency_code( $payment['currency'] );
