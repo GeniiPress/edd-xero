@@ -38,4 +38,4 @@ if( class_exists( 'EDD_License' ) ) {
 }
 
 // Boot Plugify Xero integration for EDD
-new Plugify_EDD_Xero();
+new Plugify_EDD_Xero( plugin_basename( __FILE__ ) );
