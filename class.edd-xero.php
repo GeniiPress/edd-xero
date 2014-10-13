@@ -711,7 +711,7 @@ final class Plugify_EDD_Xero {
 				$invoice->add( new Xero_Line_Item( array(
 					'description' => $line_item['name'],
 					'quantity' => $line_item['quantity'],
-					'unitamount' => $line_item['item_price'],
+					'unitamount' => $line_item['price'],
 					'tax' => $line_item['tax'],
 					'total' => $line_item['price'],
 					'accountcode' => $settings['sales_account']
