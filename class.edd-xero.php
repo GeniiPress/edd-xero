@@ -54,6 +54,9 @@ final class Plugify_EDD_Xero {
 		add_action( 'admin_notices', array( &$this, 'admin_notices' ) );
 		add_action( 'admin_enqueue_scripts', array( &$this, 'admin_enqueue_scripts' ) );
 
+		// AJAX handlers
+		add_action( 'wp_ajax_xero_rewrite_credentials', array( &$this, 'force_xero_write_keys' ), 10, 0 );
+
 		// Write certificate key files when user updates textarea fields
 		add_action( 'updated_option', array( &$this, 'xero_write_keys' ), 10, 3 );
 
@@ -292,6 +295,26 @@ final class Plugify_EDD_Xero {
 			}
 
 		}
+
+	}
+
+	/**
+	* AJAX mechnism for allowing Xero keys to be written without updated_option firing
+	*
+	* @since 1.2.1
+	*
+	* @return void
+	*/
+	public static function force_xero_write_keys() {
+
+		// Get EDD settings
+		$settings = edd_get_settings();
+
+		// Trick xero_write_keys in to thinking EDD Settings were just saved
+		Plugify_EDD_Xero::xero_write_keys( 'edd_settings', $settings, $settings );
+
+		// Send back JSON success
+		wp_send_json_success();
 
 	}
 
@@ -932,8 +955,48 @@ if( !function_exists( 'edd_description_callback' ) ) {
 			<li><?php _e( 'When you have created the application, copy and paste your Consumer Key and Consumer Secret in to the fields below', 'edd-xero' ); ?></li>
 			<li><?php _e( 'After you have pasted in your Consumer Key and Consumer Secret, open your privatekey.pen and publickey.cer files and paste their contents in to the respective fields below', 'edd-xero' ); ?></li>
 			<li><?php _e( 'Click Save Changes', 'edd-xero' ); ?></li>
-
 		</ol>
+
+		<button class="button primary" id="xero-rewrite-credentials">Force rewrite of certificate files</button>
+
+		<script type="text/javascript">
+
+			// Credentials re-write button
+			jQuery('#xero-rewrite-credentials').on('click', function(e) {
+
+				// Halt browser
+				e.preventDefault();
+
+				// Save button var
+				var button = jQuery(this);
+
+				// Confirm
+				if( confirm( 'Are you sure you want to force a re-write of your Xero API credentials?' ) ) {
+
+					// Disable button and display loading text
+					button.addClass('disabled').text('Please wait..');
+
+					// Perform AJAX request which fires off re-write event
+					jQuery.ajax({
+						url: ajaxurl, // Piggyback off EDD var
+						type: 'POST',
+						dataType: 'json',
+						data: {
+							action: 'xero_rewrite_credentials'
+						},
+						success: function(result) {
+							alert( result.success ? 'Successfully re-wrote your credentials' : 'There was a problem.. Please try again' );
+						},
+						complete: function() {
+							button.removeClass('disabled').text('Force rewrite of certificate files');
+						}
+					});
+
+				}
+
+			});
+
+		</script>
 
 		<?php
 
