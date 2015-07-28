@@ -1,0 +1,32 @@
+*** EDD Xero ***
+
+2015-07-28 Version 1.2.2
+
+Branding change
+
+2014-11-09 Version 1.2.1
+
+Added a button in settings to manually revoke certificates
+
+2014-10-14 Version 1.2
+
+Plugin basename is no longer hard-coded
+Discounts on line items are now sent to Xero
+Added the filter edd_xero_invoice_number to allow developers to modify invoice numbers
+Added support for EDD_Fees API (includes Simple Shipping, Discounts Pro, Volume Discounts, and other extensions)
+
+2014-07-07 Version 1.1
+
+Feature: Currency code sent to Xero now matches EDD settings, instead of letting Xero automatically assign a default currency. The merchants Xero account must support this currency or the invoice will not be created.
+Feature: Added an option to let the user define what status an invoice should be created as. Draft, Submitted for Approval and Authorised
+Feature: Added an option which lets the user define whether payments should also automatically be sent to Xero.
+Feature: Added options to define Sales account code and Payments account code. Both are required for the above two features.
+Tweak: Invoice line item totals are now sent exclusive of tax, with tax explicitly defined separately. This should ensure amounts match up exactly from EDD to Xero.
+Tweak: All JavaScript error alerts now display a tip letting the user know to check Payment Notes for any errors that have occured.
+Tweak: Updated label on "Invoice Details" metabox to note that the Total displayed is tax inclusive.
+Tweak: Aesthetically shuffled around the layout of the Xero Settings page
+Tweak: Updated POT file with new strings
+
+2014-06-16 Version 1.0
+
+Initial release.

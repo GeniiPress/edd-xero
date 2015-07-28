@@ -947,7 +947,7 @@ if( !function_exists( 'edd_description_callback' ) ) {
 		<p><?php _e( 'Please supply the required details for Easy Digital Downloads - Xero to function.', 'edd-xero' ); ?><br /><?php _e( 'If you need help, please follow the below list of instructions.', 'edd-xero' ); ?></p>
 
 		<ol class="instructions">
-			<li><?php echo sprintf( '%s <a href="http://developer.xero.com/" target="_blank">http://developer.xero.com/</a> %s', __( 'Login to', 'edd-xero' ), __( 'using your usual Xero account', 'edd-xero' ) ); ?></li>
+			<li><?php echo sprintf( '%s <a href="http://api.xero.com/" target="_blank">http://api.xero.com/</a> %s', __( 'Login to', 'edd-xero' ), __( 'using your usual Xero account', 'edd-xero' ) ); ?></li>
 			<li><?php echo sprintf( '%s <a href="https://api.xero.com/Application/List" target="_blank">My Applications</a> tab', __( 'Navigate to the', 'edd-xero' ), __( 'tab', 'edd-xero' ) ); ?></li>
 			<li><?php _e(' Click "Add Application"', 'edd-xero' ); ?></li>
 			<li><?php _e( 'You should see an option for creating a Public or Private application.', 'edd-xero' ); ?> <strong><?php _e( 'Choose Private', 'edd-xero' ); ?></strong></li>
