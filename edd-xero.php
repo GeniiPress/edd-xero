@@ -1,12 +1,12 @@
 <?php
-/*
-Plugin Name: Easy Digital Downloads - Xero
-Plugin URI: https://plugify.io
-Description: Integrate your Easy Digital Downloads store with your Xero account
-Author: Plugify
-Version: 1.2.1
-Author URI: https://plugify.io
-*/
+/**
+ * Plugin Name: Easy Digital Downloads - Xero
+ * Plugin URI: http://shopplugins.com
+ * Description: Integrate your Easy Digital Downloads store with your Xero account
+ * Author: Daniel Espinoza
+ * Version: 1.2.2
+ * Author URI: http://shopplugins.com
+ */
 
 // Ensure WordPress has been bootstrapped
 if( !defined( 'ABSPATH' ) ) {
@@ -34,7 +34,7 @@ if( !class_exists( 'Plugify_EDD_Xero' ) ) {
 
 // Before core plugin loads, instantiate the EDD license
 if( class_exists( 'EDD_License' ) ) {
-	new EDD_License( __FILE__, 'EDD Xero', '1.2.1', 'Plugify Plugins' );
+	new EDD_License( __FILE__, 'EDD Xero', '1.2.2', 'Daniel Espinoza' );
 }
 
 // Boot Plugify Xero integration for EDD
