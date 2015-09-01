@@ -1,21 +1,27 @@
 <?php
-
-// Class for handling Xero Contact objects
+/**
+ * Xero_Contact
+ *
+ * Class for handling Xero Contact objects
+ *
+ * @version 0.2
+ */
 
 class Xero_Contact extends Xero_Resource {
 
 	private $_first_name = '';
 	private $_last_name = '';
 	private $_email = '';
+	private $_contact_number = '';
+	private $_name ='';
 
 	/**
-	* Xero_Contact constructor
-	*
-	* @since 0.1
-	*
-	* @param array $initialize Array contained first_name, last_name and email. All keys are optional.
-	* @return void
-	*/
+	 * Xero_Contact constructor
+	 *
+	 * @since 0.1
+	 *
+	 * @param array $initialize Array contained first_name, last_name and email. All keys are optional.
+	 */
 	public function __construct ( $initialize = null ) {
 
 		if( !is_array( $initialize ) )
@@ -33,6 +39,13 @@ class Xero_Contact extends Xero_Resource {
 			$this->_email = $initialize['email'];
 		}
 
+		if( isset( $initialize['name'] ) ) {
+			$this->_name = $initialize['name'];
+		}
+
+		if( isset( $initialize['contact_number'] ) ) {
+			$this->_contact_number = $initialize['contact_number'];
+		}
 	}
 
 	/**
@@ -59,6 +72,18 @@ class Xero_Contact extends Xero_Resource {
 		$this->_last_name = $last_name;
 	}
 
+	/**
+	 * Update name of the contact. Field is used if first_name and last_name are empty.
+	 *
+	 * @since 0.2
+	 *
+	 * @param string $name Name of the contact. EG, 'ABC Inc.'
+	 * @return void
+	 */
+	public function set_name ( $name ) {
+		$this->_name = $name;
+	}
+
 
 	/**
 	* Update the email address of this contact
@@ -72,10 +97,24 @@ class Xero_Contact extends Xero_Resource {
 		$this->_email = $email;
 	}
 
+
+	/**
+	 * Update the email address of this contact
+	 *
+	 * @since 0.2
+	 *
+	 * @param string $contact_number Contact Number, usually the WordPress User ID
+	 * @return void
+	 */
+	public function set_contact_number ( $contact_number ) {
+		$this->_contact_number = $contact_number;
+	}
+
+
 	/**
 	* Generate and return XML for this Xero_Contact object
 	*
-	* @since 0.1
+	* @since 0.2
 	*
 	* @return string Returns generated XML for this Xero_Contact for use in the Xero API
 	*/
@@ -87,8 +126,17 @@ class Xero_Contact extends Xero_Resource {
 		// Open <Contact> tag
 		$_[] = '<Contact>';
 
-		// Set first name and last name
-		$_[] = '<Name>' . trim( $this->_first_name . ' ' . $this->_last_name ) . '</Name>';
+		if ( !empty( $this->_first_name) && !empty($this->_last_name) ) {
+			// Set first name and last name
+			$_[] = '<Name>' . trim( $this->_first_name . ' ' . $this->_last_name ) . '</Name>';
+		} elseif ( !empty ( $this->_name ) ) {
+			$_[] = '<Name>' . trim( $this->_name ) . '</Name>';
+		}
+
+		if ( !empty( $this->_contact_number ) ) {
+			// Set contact number
+			$_[] = '<ContactNumber>' . trim( $this->_contact_number ) . '</ContactNumber>';
+		}
 
 		// Set email address
 		$_[] = '<EmailAddress>' . $this->_email . '</EmailAddress>';

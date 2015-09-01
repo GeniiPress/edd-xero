@@ -4,7 +4,7 @@
  * Plugin URI: http://shopplugins.com
  * Description: Integrate your Easy Digital Downloads store with your Xero account
  * Author: Daniel Espinoza
- * Version: 1.2.2
+ * Version: 1.2.3
  * Author URI: http://shopplugins.com
  */
 
@@ -34,7 +34,7 @@ if( !class_exists( 'Plugify_EDD_Xero' ) ) {
 
 // Before core plugin loads, instantiate the EDD license
 if( class_exists( 'EDD_License' ) ) {
-	new EDD_License( __FILE__, 'EDD Xero', '1.2.2', 'Daniel Espinoza' );
+	new EDD_License( __FILE__, 'EDD Xero', '1.2.3', 'Daniel Espinoza' );
 }
 
 // Boot Plugify Xero integration for EDD

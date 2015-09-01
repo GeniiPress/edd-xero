@@ -721,12 +721,20 @@ final class Plugify_EDD_Xero {
 				// Do nothing.. Xero will automatically assign a currency. Good fallback if the above fails.
 			}
 
-			// Set contact (invoice recipient) details
-			$invoice->set_contact( new Xero_Contact( array(
-				'first_name' => $contact['first_name'],
-				'last_name' => $contact['last_name'],
-				'email' => $contact['email']
-			) ) );
+			if ( empty( $contact['first_name']) && empty( $contact['last_name'] ) ){
+				// Set contact (invoice recipient) details
+				$invoice->set_contact( new Xero_Contact( array(
+					'email' => $contact['email'],
+					'name' => $contact['email'],
+				) ) );
+			} else {
+				// Set contact (invoice recipient) details
+				$invoice->set_contact( new Xero_Contact( array(
+					'first_name' => $contact['first_name'],
+					'last_name' => $contact['last_name'],
+					'email' => $contact['email'],
+				) ) );
+			}
 
 			// Add purchased items to invoice
 			foreach( $cart as $line_item ) {

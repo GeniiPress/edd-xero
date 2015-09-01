@@ -1,5 +1,9 @@
 *** EDD Xero ***
 
+2015-08-31 Version 1.2.3
+
+Fix for sending with no name.
+
 2015-07-28 Version 1.2.2
 
 Branding change
