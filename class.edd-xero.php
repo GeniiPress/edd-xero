@@ -75,6 +75,8 @@ final class Plugify_EDD_Xero {
 	*/
 	public function admin_init () {
 
+		add_filter( 'plugin_action_links_' . $this->basename, array( $this, 'plugin_links' ) );
+
 		// Admin AJAX hooks
 		add_action( 'wp_ajax_invoice_lookup', array( &$this, 'ajax_xero_invoice_lookup' ) );
 		add_action( 'wp_ajax_generate_invoice', array( &$this, 'ajax_generate_invoice' ) );
@@ -935,6 +937,22 @@ final class Plugify_EDD_Xero {
 		);
 
 	}
+
+	/**
+	 * Plugin page links.
+	 *
+	 * @param $links
+	 * @return array
+	 */
+	function plugin_links( $links ) {
+
+		$plugin_links = array(
+			'<a href="' . admin_url( 'edit.php?post_type=download&page=edd-settings&tab=extensions' ) . '">' . __( 'Settings', 'edd' ) . '</a>',
+		);
+
+		return array_merge( $plugin_links, $links );
+	}
+
 
 }
 

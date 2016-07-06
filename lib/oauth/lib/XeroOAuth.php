@@ -367,7 +367,7 @@ class XeroOAuth {
 			// do it!
 		$response = curl_exec ( $c );
 		if ($response === false) {
-			$response = 'Curl error: ' . curl_error ( $c );
+			$response = 'Curl error: ' . curl_error ( $c ) . ', curl errno: ' . curl_errno( $c ) ;
 			$code = 1;
 		} else {
 			$code = curl_getinfo ( $c, CURLINFO_HTTP_CODE );
