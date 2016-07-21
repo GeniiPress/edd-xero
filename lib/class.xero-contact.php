@@ -9,11 +9,19 @@
 
 class Xero_Contact extends Xero_Resource {
 
-	private $_first_name = '';
-	private $_last_name = '';
-	private $_email = '';
+	private $_first_name     = '';
+	private $_last_name      = '';
+	private $_email          = '';
 	private $_contact_number = '';
-	private $_name ='';
+	private $_name           = '';
+	private $_address_type   = 'STREET';
+	private $_address_1      = '';
+	private $_address_2      = '';
+	private $_city           = '';
+	private $_region         = '';
+	private $_postal_code    = '';
+	private $_country        = '';
+
 
 	/**
 	 * Xero_Contact constructor
@@ -45,6 +53,30 @@ class Xero_Contact extends Xero_Resource {
 
 		if( isset( $initialize['contact_number'] ) ) {
 			$this->_contact_number = $initialize['contact_number'];
+		}
+
+		if( isset( $initialize['address_1'] ) ) {
+			$this->_address_1 = $initialize['address_1'];
+		}
+
+		if( isset( $initialize['address_2'] ) ) {
+			$this->_address_2 = $initialize['address_2'];
+		}
+
+		if( isset( $initialize['city'] ) ) {
+			$this->_city = $initialize['city'];
+		}
+
+		if( isset( $initialize['region'] ) ) {
+			$this->_region = $initialize['region'];
+		}
+
+		if( isset( $initialize['postal_code'] ) ) {
+			$this->_postal_code = $initialize['postal_code'];
+		}
+
+		if( isset( $initialize['country'] ) ) {
+			$this->_country = $initialize['country'];
 		}
 	}
 
@@ -141,6 +173,18 @@ class Xero_Contact extends Xero_Resource {
 		// Set email address
 		$_[] = '<EmailAddress>' . $this->_email . '</EmailAddress>';
 
+		// Set Address if it exists
+		if ( !empty( $this->_address_1 ) ) {
+			$_[] = '<Addresses>';
+			$_[] = '<Address>';
+			$_[] = '<AddressType>' . $this->_address_type . '</AddressType>';
+			$_[] = '<AddressLine1>' . $this->_address_1 . '</AddressLine1>';
+			$_[] = '<AddressLine2>' . $this->_address_2 . '</AddressLine2>';
+			$_[] = '<City>' . $this->_city . '</City>';
+			$_[] = '<PostalCode>' . $this->_postal_code . '</PostalCode>';
+			$_[] = '</Address>';
+			$_[] = '</Addresses>';
+		}
 		// Close <Contact> tag
 		$_[] = '</Contact>';
 

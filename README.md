@@ -1,4 +1,4 @@
-# [Easy Digital Downloads - Xero](https://plugify.io)
+# Easy Digital Downloads - Xero
 
 [Love Xero](https://www.xero.com)? Love selling stuff on your WordPress site with [Easy Digital Downloads](http://easydigitaldownloads.com)? Combining the two seems like a no brainer.
 

@@ -731,11 +731,24 @@ final class Plugify_EDD_Xero {
 				) ) );
 			} else {
 				// Set contact (invoice recipient) details
-				$invoice->set_contact( new Xero_Contact( array(
-					'first_name' => $contact['first_name'],
-					'last_name' => $contact['last_name'],
-					'email' => $contact['email'],
-				) ) );
+				$args = array();
+				$args['first_name']  =  $contact['first_name'];
+				$args['last_name']   =  $contact['last_name'];
+				$args['email']       =  $contact['email'];
+				if ( isset( $contact['address']['line1'] ) )
+					$args['address_1']   =  $contact['address']['line1'];
+				if ( isset( $contact['address']['line2'] ) )
+					$args['address_2']   =  $contact['address']['line2'];
+				if ( isset( $contact['address']['city'] ) )
+					$args['city']        =  $contact['address']['city'];
+				if ( isset( $contact['address']['state'] ) )
+					$args['region']      =  $contact['address']['state'];
+				if ( isset( $contact['address']['zip'] ) )
+					$args['postal_code'] =  $contact['address']['zip'];
+				if ( isset( $contact['address']['country'] ) )
+					$args['country']     =  $contact['address']['country'];
+
+				$invoice->set_contact( new Xero_Contact( $args ) );
 			}
 
 			// Add purchased items to invoice

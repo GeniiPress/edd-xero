@@ -4,13 +4,13 @@
 
 class Xero_Invoice extends Xero_Resource {
 
-	private $_invoicenumber = '';
-	private $_contact = '';
-	private $_date = '';
-	private $_due_date = '';
+	private $_invoicenumber     = '';
+	private $_contact           = '';
+	private $_date              = '';
+	private $_due_date          = '';
 	private $_line_amount_types = '';
-	private $_currency_code = '';
-	private $_status = 'DRAFT';
+	private $_currency_code     = '';
+	private $_status            = 'DRAFT';
 
 	private $_line_items = array();
 
@@ -18,8 +18,6 @@ class Xero_Invoice extends Xero_Resource {
 	* Xero_Invoice constructor
 	*
 	* @since 0.1
-	*
-	* @return void
 	*/
 	public function __construct () {
 
