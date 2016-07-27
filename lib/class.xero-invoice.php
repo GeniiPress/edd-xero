@@ -187,8 +187,6 @@ class Xero_Invoice extends Xero_Resource {
 		// Close <Invoice> tag
 		$_[] = '</Invoice>';
 
-		error_log( "XML: \n" . implode( '', $_ ) );
-
 		// Collapse in to one string and send back
 		return implode( '', $_ );
 
