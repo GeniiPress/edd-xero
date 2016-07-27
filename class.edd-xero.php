@@ -11,7 +11,7 @@ final class Plugify_EDD_Xero {
 
 	/**
 	* Class constructor. Hook in to EDD, setup actions and everything we need.
-	*
+	*a
 	* @since 0.1
 	* @return void
 	*/
@@ -74,6 +74,8 @@ final class Plugify_EDD_Xero {
 	* @return void
 	*/
 	public function admin_init () {
+
+		add_filter( 'plugin_action_links_' . $this->basename, array( $this, 'plugin_links' ) );
 
 		// Admin AJAX hooks
 		add_action( 'wp_ajax_invoice_lookup', array( &$this, 'ajax_xero_invoice_lookup' ) );
@@ -212,6 +214,16 @@ final class Plugify_EDD_Xero {
 				'name' => __( 'Auto Send Payments', 'edd-xero' ),
 				'desc' => __( 'When an invoice is created, automatically apply the associated payment', 'edd-xero' ),
 				'type' => 'checkbox'
+			),
+			'line_amount_type' => array(
+				'id' => 'line_amount_type',
+				'name' => __( 'Line Amount Type', 'edd-xero' ),
+				'type' => 'select',
+				'desc' => __( 'Send invoice line item amount as inclusive or exclusive of tax', 'edd-xero' ),
+				'options' => array(
+					'Exclusive' => 'Exclusive',
+					'Inclusive' => 'Inclusive'
+				)
 			),
 			'sales_account' => array(
 				'id' => 'sales_account',
@@ -729,11 +741,24 @@ final class Plugify_EDD_Xero {
 				) ) );
 			} else {
 				// Set contact (invoice recipient) details
-				$invoice->set_contact( new Xero_Contact( array(
-					'first_name' => $contact['first_name'],
-					'last_name' => $contact['last_name'],
-					'email' => $contact['email'],
-				) ) );
+				$args = array();
+				$args['first_name']  =  $contact['first_name'];
+				$args['last_name']   =  $contact['last_name'];
+				$args['email']       =  $contact['email'];
+				if ( isset( $contact['address']['line1'] ) )
+					$args['address_1']   =  $contact['address']['line1'];
+				if ( isset( $contact['address']['line2'] ) )
+					$args['address_2']   =  $contact['address']['line2'];
+				if ( isset( $contact['address']['city'] ) )
+					$args['city']        =  $contact['address']['city'];
+				if ( isset( $contact['address']['state'] ) )
+					$args['region']      =  $contact['address']['state'];
+				if ( isset( $contact['address']['zip'] ) )
+					$args['postal_code'] =  $contact['address']['zip'];
+				if ( isset( $contact['address']['country'] ) )
+					$args['country']     =  $contact['address']['country'];
+
+				$invoice->set_contact( new Xero_Contact( $args ) );
 			}
 
 			// Add purchased items to invoice
@@ -772,6 +797,11 @@ final class Plugify_EDD_Xero {
 			// Set invoice status
 			if( isset( $settings['invoice_status'] ) && !empty( $settings['invoice_status'] ) ) {
 				$invoice->set_status( $settings['invoice_status'] );
+			}
+
+			// Set line item tax status
+			if( isset( $settings['line_amount_type'] ) && !empty( $settings['line_amount_type']) ) {
+				$invoice->set_line_amount_types( $settings['line_amount_type'] );
 			}
 
 			// Send the invoice to Xero
@@ -935,6 +965,22 @@ final class Plugify_EDD_Xero {
 		);
 
 	}
+
+	/**
+	 * Plugin page links.
+	 *
+	 * @param $links
+	 * @return array
+	 */
+	function plugin_links( $links ) {
+
+		$plugin_links = array(
+			'<a href="' . admin_url( 'edit.php?post_type=download&page=edd-settings&tab=extensions' ) . '">' . __( 'Settings', 'edd' ) . '</a>',
+		);
+
+		return array_merge( $plugin_links, $links );
+	}
+
 
 }
 
