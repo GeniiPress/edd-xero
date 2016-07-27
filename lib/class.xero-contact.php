@@ -14,7 +14,12 @@ class Xero_Contact extends Xero_Resource {
 	private $_email          = '';
 	private $_contact_number = '';
 	private $_name           = '';
-	private $_address_type   = 'STREET';
+	/**
+	 * The default mailing address for invoices
+	 * @see https://developer.xero.com/documentation/api/types/#Addresses
+	 * @var string
+	 */
+	private $_address_type   = 'POBOX';
 	private $_address_1      = '';
 	private $_address_2      = '';
 	private $_city           = '';
