@@ -11,7 +11,7 @@ final class Plugify_EDD_Xero {
 
 	/**
 	* Class constructor. Hook in to EDD, setup actions and everything we need.
-	*
+	*a
 	* @since 0.1
 	* @return void
 	*/
@@ -214,6 +214,16 @@ final class Plugify_EDD_Xero {
 				'name' => __( 'Auto Send Payments', 'edd-xero' ),
 				'desc' => __( 'When an invoice is created, automatically apply the associated payment', 'edd-xero' ),
 				'type' => 'checkbox'
+			),
+			'line_amount_type' => array(
+				'id' => 'line_amount_type',
+				'name' => __( 'Line Amount Type', 'edd-xero' ),
+				'type' => 'select',
+				'desc' => __( 'Send invoice line item amount as inclusive or exclusive of tax', 'edd-xero' ),
+				'options' => array(
+					'Exclusive' => 'Exclusive',
+					'Inclusive' => 'Inclusive'
+				)
 			),
 			'sales_account' => array(
 				'id' => 'sales_account',
@@ -787,6 +797,11 @@ final class Plugify_EDD_Xero {
 			// Set invoice status
 			if( isset( $settings['invoice_status'] ) && !empty( $settings['invoice_status'] ) ) {
 				$invoice->set_status( $settings['invoice_status'] );
+			}
+
+			// Set line item tax status
+			if( isset( $settings['line_amount_type'] ) && !empty( $settings['line_amount_type']) ) {
+				$invoice->set_line_amount_types( $settings['line_amount_type'] );
 			}
 
 			// Send the invoice to Xero

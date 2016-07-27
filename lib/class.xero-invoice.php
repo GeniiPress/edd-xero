@@ -8,7 +8,7 @@ class Xero_Invoice extends Xero_Resource {
 	private $_contact           = '';
 	private $_date              = '';
 	private $_due_date          = '';
-	private $_line_amount_types = '';
+	private $_line_amount_types = 'Exclusive';
 	private $_currency_code     = '';
 	private $_status            = 'DRAFT';
 
@@ -128,6 +128,17 @@ class Xero_Invoice extends Xero_Resource {
 	}
 
 	/**
+	 * Set whether line amounts are exclusive or inclusive of tax
+	 *
+	 * @since 1.2.4
+	 * @param $line_amount_types
+	 * @return void
+	 */
+	public function set_line_amount_types( $line_amount_types ){
+		$this->_line_amount_types = $line_amount_types;
+	}
+
+	/**
 	* Generate and return XML for this Xero Invoice which will be sent to the Xero API
 	*
 	* @since 0.1
@@ -171,10 +182,12 @@ class Xero_Invoice extends Xero_Resource {
 		}
 
 		$_[] = '</LineItems>';
-		$_[] = '<LineAmountTypes>Exclusive</LineAmountTypes>';
+		$_[] = '<LineAmountTypes>' . $this->_line_amount_types . '</LineAmountTypes>';
 
 		// Close <Invoice> tag
 		$_[] = '</Invoice>';
+
+		error_log( "XML: \n" . implode( '', $_ ) );
 
 		// Collapse in to one string and send back
 		return implode( '', $_ );
