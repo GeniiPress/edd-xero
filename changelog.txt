@@ -1,5 +1,9 @@
 *** EDD Xero ***
 
+2016-08-02 Version 1.2.5
+
+Fixed fatal error Call to undefined method Xero_Invoice::set_line_amount_types()
+
 2016-07-27 Version 1.2.4
 
 Added setting that lets store owners set Line Items as INCLUSIVE or EXCLUSIVE (default) of tax.
