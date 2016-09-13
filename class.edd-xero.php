@@ -502,7 +502,7 @@ final class Plugify_EDD_Xero {
 	*/
 	public function ajax_xero_invoice_lookup () {
 
-		if( !$_REQUEST['invoice_number'] ) {
+		if( !isset( $_REQUEST['invoice_number'] ) ) {
 			wp_send_json_error();
 		}
 
