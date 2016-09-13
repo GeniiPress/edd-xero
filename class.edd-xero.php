@@ -295,8 +295,8 @@ final class Plugify_EDD_Xero {
 		if( $option == 'edd_settings' ) {
 
 			$keys = array(
-				'privatekey.pem' => $new_value['private_key'],
-				'publickey.cer' => $new_value['public_key']
+				'privatekey.pem' => isset( $new_value['private_key'] ) ? $new_value['private_key'] : '',
+				'publickey.cer' => isset(  $new_value['public_key'] ) ? $new_value['public_key'] : '',
 			);
 
 			// Attempt to write key files
