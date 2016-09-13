@@ -641,13 +641,15 @@ final class Plugify_EDD_Xero {
 	}
 
 	/**
-	* Send a payment to Xero
-	*
-	* @since 0.1
-	*
-	* @param Xero_Invoice $invoice Xero_Payment object which contains payment data, which will be applied to the invoice
-	* @return SimpleXMLObject
-	*/
+	 * Send a payment to Xero
+	 *
+	 * @since 0.1
+	 *
+	 * @param $xero_payment
+	 * @param $payment_id
+	 *
+	 * @return bool|string
+	 */
 	private function put_payment ( $xero_payment, $payment_id ) {
 
 		// Abort if a Xero_Invoice object was not passed
