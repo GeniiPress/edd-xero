@@ -187,6 +187,7 @@ class Xero_Contact extends Xero_Resource {
 			$_[] = '<AddressLine2>' . $this->_address_2 . '</AddressLine2>';
 			$_[] = '<City>' . $this->_city . '</City>';
 			$_[] = '<PostalCode>' . $this->_postal_code . '</PostalCode>';
+			$_[] = '<Country>' . $this->_country . '</Country>';
 			$_[] = '</Address>';
 			$_[] = '</Addresses>';
 		}

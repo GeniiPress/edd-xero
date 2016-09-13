@@ -1,5 +1,10 @@
 *** EDD Xero ***
 
+2016-09-13 Version 1.2.6
+
+Fixed country code not being sent with customer record
+
+
 2016-08-02 Version 1.2.5
 
 Fixed fatal error Call to undefined method Xero_Invoice::set_line_amount_types()
