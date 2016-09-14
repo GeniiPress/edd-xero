@@ -414,6 +414,7 @@ final class Plugify_EDD_Xero {
 
 		// Insert a note on the payment informing merchant that Xero invoice generation failed, and why
 		$message = !is_null( $custom_message ) ? __( $custom_message, 'edd-xero' ) : __( 'Xero invoice could not be created.', 'edd-xero' );
+		$message .= $invoice->get_xml();
 		edd_insert_payment_note( $payment_id, $message . ( !is_null( $postfix ) ? __( ' Xero said: ' . $postfix, 'edd-xero' ) : NULL ) );
 
 	}
@@ -610,9 +611,17 @@ final class Plugify_EDD_Xero {
 		if( $payment = edd_get_payment_meta( $payment_id ) ) {
 
 			// Get total for order
-			$subtotal = edd_get_payment_subtotal( $payment_id, false );
-			$tax 			= edd_get_payment_tax( $payment_id, false );
-			$total		= $subtotal + $tax;
+			$subtotal   = edd_get_payment_subtotal( $payment_id );
+			$tax 		= edd_get_payment_tax( $payment_id, false );
+			$fees       = edd_get_payment_fees( $payment_id );
+			$fee_total  = 0.00;
+			foreach( $fees as $fee ){
+				if ( $fee['amount'] <= 0 ) {
+					continue;
+				}
+				$fee_total += $fee['amount'];
+			}
+			$total		= $subtotal + $tax + $fee_total;
 
 			// Get EDD settings
 			$settings = edd_get_settings();
