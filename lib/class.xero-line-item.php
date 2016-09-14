@@ -24,7 +24,7 @@ class Xero_Line_Item extends Xero_Resource {
 
 		if( !empty( $initialize ) ) {
 
-			$this->_description = $initialize['description'];
+			$this->_description = $this->escape_xml( $initialize['description'] );
 			$this->_quantity = $initialize['quantity'];
 			$this->_unitamount = $initialize['unitamount'];
 			$this->_tax = $initialize['tax'];

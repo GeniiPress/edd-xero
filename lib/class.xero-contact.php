@@ -41,11 +41,11 @@ class Xero_Contact extends Xero_Resource {
 			return;
 
 		if( isset( $initialize['first_name'] ) ) {
-			$this->_first_name = $initialize['first_name'];
+			$this->_first_name = $this->escape_xml( $initialize['first_name'] );
 		}
 
 		if( isset( $initialize['last_name'] ) ) {
-			$this->_last_name = $initialize['last_name'];
+			$this->_last_name = $this->escape_xml( $initialize['last_name'] );
 		}
 
 		if( isset( $initialize['email'] ) ) {
@@ -53,7 +53,7 @@ class Xero_Contact extends Xero_Resource {
 		}
 
 		if( isset( $initialize['name'] ) ) {
-			$this->_name = $initialize['name'];
+			$this->_name = $this->escape_xml( $initialize['name'] );
 		}
 
 		if( isset( $initialize['contact_number'] ) ) {
@@ -61,15 +61,15 @@ class Xero_Contact extends Xero_Resource {
 		}
 
 		if( isset( $initialize['address_1'] ) ) {
-			$this->_address_1 = $initialize['address_1'];
+			$this->_address_1 = $this->escape_xml( $initialize['address_1'] );
 		}
 
 		if( isset( $initialize['address_2'] ) ) {
-			$this->_address_2 = $initialize['address_2'];
+			$this->_address_2 = $this->escape_xml( $initialize['address_2'] );
 		}
 
 		if( isset( $initialize['city'] ) ) {
-			$this->_city = $initialize['city'];
+			$this->_city = $this->escape_xml( $initialize['city'] );
 		}
 
 		if( isset( $initialize['region'] ) ) {
