@@ -1,5 +1,12 @@
 *** EDD Xero ***
 
+2016-09-14 Version 1.2.6
+
+Fixed: Country code not being sent with customer record
+Fixed: Fees are added to payment total
+Fixed: Escaping illegal XML characters in Customer and LineItem
+
+
 2016-08-02 Version 1.2.5
 
 Fixed fatal error Call to undefined method Xero_Invoice::set_line_amount_types()

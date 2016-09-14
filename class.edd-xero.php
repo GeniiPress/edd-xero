@@ -295,8 +295,8 @@ final class Plugify_EDD_Xero {
 		if( $option == 'edd_settings' ) {
 
 			$keys = array(
-				'privatekey.pem' => $new_value['private_key'],
-				'publickey.cer' => $new_value['public_key']
+				'privatekey.pem' => isset( $new_value['private_key'] ) ? $new_value['private_key'] : '',
+				'publickey.cer' => isset(  $new_value['public_key'] ) ? $new_value['public_key'] : '',
 			);
 
 			// Attempt to write key files
@@ -414,6 +414,7 @@ final class Plugify_EDD_Xero {
 
 		// Insert a note on the payment informing merchant that Xero invoice generation failed, and why
 		$message = !is_null( $custom_message ) ? __( $custom_message, 'edd-xero' ) : __( 'Xero invoice could not be created.', 'edd-xero' );
+		$message .= $invoice->get_xml();
 		edd_insert_payment_note( $payment_id, $message . ( !is_null( $postfix ) ? __( ' Xero said: ' . $postfix, 'edd-xero' ) : NULL ) );
 
 	}
@@ -502,7 +503,7 @@ final class Plugify_EDD_Xero {
 	*/
 	public function ajax_xero_invoice_lookup () {
 
-		if( !$_REQUEST['invoice_number'] ) {
+		if( !isset( $_REQUEST['invoice_number'] ) ) {
 			wp_send_json_error();
 		}
 
@@ -610,9 +611,17 @@ final class Plugify_EDD_Xero {
 		if( $payment = edd_get_payment_meta( $payment_id ) ) {
 
 			// Get total for order
-			$subtotal = edd_get_payment_subtotal( $payment_id, false );
-			$tax 			= edd_get_payment_tax( $payment_id, false );
-			$total		= $subtotal + $tax;
+			$subtotal   = edd_get_payment_subtotal( $payment_id );
+			$tax 		= edd_get_payment_tax( $payment_id, false );
+			$fees       = edd_get_payment_fees( $payment_id );
+			$fee_total  = 0.00;
+			foreach( $fees as $fee ){
+				if ( $fee['amount'] <= 0 ) {
+					continue;
+				}
+				$fee_total += $fee['amount'];
+			}
+			$total		= $subtotal + $tax + $fee_total;
 
 			// Get EDD settings
 			$settings = edd_get_settings();
@@ -641,13 +650,15 @@ final class Plugify_EDD_Xero {
 	}
 
 	/**
-	* Send a payment to Xero
-	*
-	* @since 0.1
-	*
-	* @param Xero_Invoice $invoice Xero_Payment object which contains payment data, which will be applied to the invoice
-	* @return SimpleXMLObject
-	*/
+	 * Send a payment to Xero
+	 *
+	 * @since 0.1
+	 *
+	 * @param $xero_payment
+	 * @param $payment_id
+	 *
+	 * @return bool|string
+	 */
 	private function put_payment ( $xero_payment, $payment_id ) {
 
 		// Abort if a Xero_Invoice object was not passed
