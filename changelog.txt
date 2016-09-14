@@ -1,8 +1,10 @@
 *** EDD Xero ***
 
-2016-09-13 Version 1.2.6
+2016-09-14 Version 1.2.6
 
-Fixed country code not being sent with customer record
+Fixed: Country code not being sent with customer record
+Fixed: Fees are added to payment total
+Fixed: Escaping illegal XML characters in Customer and LineItem
 
 
 2016-08-02 Version 1.2.5
