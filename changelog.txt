@@ -1,5 +1,8 @@
 *** EDD Xero ***
 
+2016-10-27 Version 1.2.7
+Added a debug setting to output data to log to help with troubleshooting.
+
 2016-09-14 Version 1.2.6
 
 Fixed: Country code not being sent with customer record

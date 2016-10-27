@@ -13,7 +13,6 @@ final class Plugify_EDD_Xero {
 	* Class constructor. Hook in to EDD, setup actions and everything we need.
 	*a
 	* @since 0.1
-	* @return void
 	*/
 	public function __construct ( $basename ) {
 
@@ -272,6 +271,12 @@ final class Plugify_EDD_Xero {
 				'name' => __( 'Public Key', 'edd-xero' ),
 				'desc' => __( 'Public Key file (.cer)', 'edd-xero' ),
 				'type' => 'textarea'
+			),
+			'xero_debug' => array(
+				'id' => 'xero_debug',
+				'name' => __( 'Debug', 'edd-xero' ),
+				'desc' => __( 'Write debug data to a log?', 'edd-xero' ),
+				'type' => 'checkbox'
 			)
 		);
 
@@ -680,6 +685,9 @@ final class Plugify_EDD_Xero {
 			$request = $XeroOAuth->request( 'PUT', $XeroOAuth->url( 'Payments', 'core' ), array(), $xml );
 			$response = $XeroOAuth->parseResponse( $request['response'] ,'xml' );
 
+			$this->log( "put_payment Payment XML:\n" . $xml );
+			$this->log( "put_payment Response\n" . print_r( $response, true ) );
+
 			// Parse the response from Xero and fire appropriate actions
 			if( $request['code'] == 200 ) {
 				do_action( 'edd_xero_payment_success', $xero_payment, $response, $payment_id );
@@ -860,6 +868,9 @@ final class Plugify_EDD_Xero {
 			$request = $XeroOAuth->request( 'PUT', $XeroOAuth->url( 'Invoices', 'core' ), array(), $xml );
 			$response = $XeroOAuth->parseResponse( $request['response'] ,'xml' );
 
+			$this->log( "put_invoice Request XML:\n" . $xml );
+			$this->log( "put_invoice Response\n" . print_r( $response, true ) );
+
 			// Parse the response from Xero and fire appropriate actions
 			if( $request['code'] == 200 ) {
 				do_action( 'edd_xero_invoice_creation_success', $invoice, (string)$response->Invoices->Invoice->InvoiceNumber, (string)$response->Invoices->Invoice->InvoiceID, $payment_id );
@@ -883,7 +894,7 @@ final class Plugify_EDD_Xero {
 	* @since 0.1
 	*
 	* @param int $invoice_number Automatically generated human friendly invoice number. EG "INV-123"
-	* @return SimpleXMLObject
+	* @return string|bool
 	*/
 	private function get_invoice ( $invoice_number ) {
 
@@ -897,6 +908,9 @@ final class Plugify_EDD_Xero {
 
 			$request = $XeroOAuth->request( 'GET', $XeroOAuth->url( 'Invoices/' . $invoice_number, 'core' ), array(), NULL );
 			$response = $XeroOAuth->parseResponse( $request['response'] ,'xml' );
+
+			$this->log( "get_invoice Invoice Number  " . $invoice_number );
+			$this->log( "get_invoice Response  " . print_r( $response, true ) );
 
 			return $response;
 
@@ -990,6 +1004,25 @@ final class Plugify_EDD_Xero {
 		);
 
 		return array_merge( $plugin_links, $links );
+	}
+
+	/**
+	 * @param $message
+	 */
+	public function log( $message ) {
+
+		$settings = edd_get_settings();
+		if ( isset( $settings['xero_debug'] ) && $settings['xero_debug'] ) {
+			$dir = dirname( __FILE__ );
+
+			$handle = fopen( trailingslashit( $dir ) . 'log.txt', 'a' );
+			if ( $handle ) {
+				$time   = date_i18n( 'm-d-Y @ H:i:s -' );
+				fwrite( $handle, $time . " " . $message . "\n" );
+				fclose( $handle );
+			}
+		}
+
 	}
 
 
