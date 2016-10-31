@@ -168,6 +168,8 @@ class Xero_Contact extends Xero_Resource {
 			$_[] = '<Name>' . trim( $this->_first_name . ' ' . $this->_last_name ) . '</Name>';
 		} elseif ( !empty ( $this->_name ) ) {
 			$_[] = '<Name>' . trim( $this->_name ) . '</Name>';
+		} else {
+			$_[] = '<Name>' . trim( $this->_first_name ) . '</Name>';
 		}
 
 		if ( !empty( $this->_contact_number ) ) {
