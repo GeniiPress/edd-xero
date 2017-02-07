@@ -37,30 +37,30 @@ final class Plugify_EDD_Xero {
 	public function initialize () {
 
 		// Hook in to created payments
-		add_action( 'edd_complete_purchase', array( &$this, 'create_invoice' ) );
+		add_action( 'edd_complete_purchase', array( $this, 'create_invoice' ) );
 
 		// Setup actions for invoice creation success/fail
-		add_action( 'edd_xero_invoice_creation_success', array( &$this, 'xero_invoice_success' ), 99, 4 );
-		add_action( 'edd_xero_invoice_creation_fail', array( &$this, 'xero_invoice_fail' ), 10, 4 );
-		add_action( 'edd_xero_payment_success', array( &$this, 'xero_payment_success' ), 10, 3 );
-		add_action( 'edd_xero_payment_fail', array( &$this, 'xero_payment_fail' ), 10, 3 );
+		add_action( 'edd_xero_invoice_creation_success', array( $this, 'xero_invoice_success' ), 99, 4 );
+		add_action( 'edd_xero_invoice_creation_fail', array( $this, 'xero_invoice_fail' ), 10, 4 );
+		add_action( 'edd_xero_payment_success', array( $this, 'xero_payment_success' ), 10, 3 );
+		add_action( 'edd_xero_payment_fail', array( $this, 'xero_payment_fail' ), 10, 3 );
 
 		// Action for displaying Xero 'metabox' on payment details page
 		add_action( 'edd_view_order_details_sidebar_after', array( &$this, 'xero_invoice_metabox' ) );
 
 		// Admin hooks
-		add_action( 'admin_init', array( &$this, 'admin_init' ) );
-		add_action( 'admin_notices', array( &$this, 'admin_notices' ) );
-		add_action( 'admin_enqueue_scripts', array( &$this, 'admin_enqueue_scripts' ) );
+		add_action( 'admin_init', array( $this, 'admin_init' ) );
+		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 
 		// AJAX handlers
-		add_action( 'wp_ajax_xero_rewrite_credentials', array( &$this, 'force_xero_write_keys' ), 10, 0 );
+		add_action( 'wp_ajax_xero_rewrite_credentials', array( $this, 'force_xero_write_keys' ), 10, 0 );
 
 		// Write certificate key files when user updates textarea fields
-		add_action( 'updated_option', array( &$this, 'xero_write_keys' ), 10, 3 );
+		add_action( 'updated_option', array( $this, 'xero_write_keys' ), 10, 3 );
 
 		// EDD filters which need to be leveraged
-		add_filter( 'edd_settings_extensions', array( &$this, 'edd_xero_register_settings' ), 10, 1 );
+		add_filter( 'edd_settings_extensions', array( $this, 'edd_xero_register_settings' ), 10, 1 );
 
 	}
 
@@ -77,9 +77,9 @@ final class Plugify_EDD_Xero {
 		add_filter( 'plugin_action_links_' . $this->basename, array( $this, 'plugin_links' ) );
 
 		// Admin AJAX hooks
-		add_action( 'wp_ajax_invoice_lookup', array( &$this, 'ajax_xero_invoice_lookup' ) );
-		add_action( 'wp_ajax_generate_invoice', array( &$this, 'ajax_generate_invoice' ) );
-		add_action( 'wp_ajax_disassociate_invoice', array( &$this, 'ajax_disassociate_invoice' ) );
+		add_action( 'wp_ajax_invoice_lookup', array( $this, 'ajax_xero_invoice_lookup' ) );
+		add_action( 'wp_ajax_generate_invoice', array( $this, 'ajax_generate_invoice' ) );
+		add_action( 'wp_ajax_disassociate_invoice', array( $this, 'ajax_disassociate_invoice' ) );
 
 	}
 
