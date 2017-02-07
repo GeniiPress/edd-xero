@@ -535,7 +535,7 @@ final class Plugify_EDD_Xero {
 		}
 
 		wp_send_json_error( array(
-			'error_message' => sprintf( '<p>%s <a href="' . admin_url('edit.php?post_type=download&page=edd-settings&tab=extensions') . '" target="_blank">%s</a>', __( 'We could not get the invoice details', 'edd-xero' ), __( 'Are your Xero settings configured correctly?', 'edd-xero' ) )
+			'error_message' => sprintf( '<p>%s <a href="' . admin_url('edit.php?post_type=download&page=edd-settings&tab=extensions&section=xero-settings') . '" target="_blank">%s</a>', __( 'We could not get the invoice details', 'edd-xero' ), __( 'Are your Xero settings configured correctly?', 'edd-xero' ) )
 		) );
 
 	}
@@ -1017,7 +1017,7 @@ final class Plugify_EDD_Xero {
 	function plugin_links( $links ) {
 
 		$plugin_links = array(
-			'<a href="' . admin_url( 'edit.php?post_type=download&page=edd-settings&tab=extensions' ) . '">' . __( 'Settings', 'edd' ) . '</a>',
+			'<a href="' . admin_url( 'edit.php?post_type=download&page=edd-settings&tab=extensions&section=xero-settings' ) . '">' . __( 'Settings', 'edd' ) . '</a>',
 		);
 
 		return array_merge( $plugin_links, $links );
