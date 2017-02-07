@@ -1,7 +1,10 @@
 <?php
 
-// Core class for plugin functionality
-
+/**
+ * Class Plugify_EDD_Xero
+ *
+ * Core class for plugin functionality
+ */
 final class Plugify_EDD_Xero {
 
 	private $xero_config = array();
@@ -10,15 +13,17 @@ final class Plugify_EDD_Xero {
 	private $title;
 
 	/**
-	* Class constructor. Hook in to EDD, setup actions and everything we need.
-	*a
-	* @since 0.1
-	*/
+	 * Class constructor. Hook in to EDD, setup actions and everything we need.
+	 *
+	 * @since 0.1
+	 * @param string $basename
+	 */
+
 	public function __construct ( $basename ) {
 
 		// Setup vars
 		$this->basename = $basename; // Can't use plugin_basename etc as edd-xero.php is the activation file
-		$this->title    = 'Easy Digital Downloads - Xero';
+		$this->title    = __( 'Easy Digital Downloads - Xero', 'edd-xero');
 
 		// Register hooks
 		$this->initialize();
@@ -29,12 +34,12 @@ final class Plugify_EDD_Xero {
 	}
 
 	/**
-	* Function to initialize everything the plugin needs to operate. WP Hooks and OAuth library
-	*
-	* @since 0.9
-	* @return void
-	*/
-	public function initialize () {
+	 * Function to initialize everything the plugin needs to operate. WP Hooks and OAuth library
+	 *
+	 * @since 0.9
+	 * @return void
+	 */
+	public function initialize() {
 
 		// Hook in to created payments
 		add_action( 'edd_complete_purchase', array( $this, 'create_invoice' ) );
@@ -66,14 +71,14 @@ final class Plugify_EDD_Xero {
 	}
 
 	/**
-	* Register hooks which are needed for the admin area, such as the 'Generate Invoice' button and automatically
-	* displaying invoice details in the metabox
-	*
-	* @since 0.1
-	*
-	* @return void
-	*/
-	public function admin_init () {
+	 * Register hooks which are needed for the admin area, such as the 'Generate Invoice' button and automatically
+	 * displaying invoice details in the metabox
+	 *
+	 * @since 0.1
+	 *
+	 * @return void
+	 */
+	public function admin_init() {
 
 		add_filter( 'plugin_action_links_' . $this->basename, array( $this, 'plugin_links' ) );
 
@@ -85,13 +90,13 @@ final class Plugify_EDD_Xero {
 	}
 
 	/**
-	* Queue up styles and scripts that EDD Xero uses in the admin area
-	*
-	* @since 0.9
-	*
-	* @return void
-	*/
-	public function admin_enqueue_scripts () {
+	 * Queue up styles and scripts that EDD Xero uses in the admin area
+	 *
+	 * @since 0.9
+	 *
+	 * @return void
+	 */
+	public function admin_enqueue_scripts() {
 
 		$screen = get_current_screen();
 
@@ -108,14 +113,14 @@ final class Plugify_EDD_Xero {
 	}
 
 	/**
-	* Handle displaying any required admin notices.
-	* Since 0.9, displays whether EDD needs to be activated or if it's not of a high enough version
-	*
-	* @since 0.9
-	*
-	* @return void
-	*/
-	public function admin_notices () {
+	 * Handle displaying any required admin notices.
+	 * Since 0.9, displays whether EDD needs to be activated or if it's not of a high enough version
+	 *
+	 * @since 0.9
+	 *
+	 * @return void
+	 */
+	public function admin_notices() {
 
 		// Display a notice if EDD is not installed and deactivate plugin
 		if( !class_exists( 'Easy_Digital_Downloads' ) ) {
@@ -150,12 +155,12 @@ final class Plugify_EDD_Xero {
 	}
 
 	/**
-	* Load language files
-	*
-	* @since 0.1
-	*
-	* @return void
-	*/
+	 * Load language files
+	 *
+	 * @since 0.1
+	 *
+	 * @return void
+	 */
 	public function load_textdomain() {
 
 		// Set filter for plugin's languages directory
@@ -182,19 +187,26 @@ final class Plugify_EDD_Xero {
 
 	}
 
+	/**
+	 * Define the Xero subsection on the Extensions tab
+	 *
+	 * @param $sections
+	 * @return mixed
+	 */
 	public function edd_xero_settings_section( $sections ) {
 		$sections['xero-settings'] = __( 'Xero', 'edd-xero');
 		return $sections;
 	}
+
 	/**
-	* Register settings fields where the user can insert the consumer key, consumer secret etc..
-	* Currently displays under the Extensions tab in EDD settings
-	*
-	* @since 0.1
-	*
-	* @return array $edd_settings
-	*/
-	public static function edd_xero_register_settings ( $settings ) {
+	 * Register settings fields where the user can insert the consumer key, consumer secret etc..
+	 * Currently displays under the Extensions tab in EDD settings
+	 *
+	 * @since 0.1
+	 * @param array $settings
+	 * @return array $edd_settings
+	 */
+	public static function edd_xero_register_settings( $settings ) {
 
 		$xero_settings = array(
 			array(
@@ -295,17 +307,17 @@ final class Plugify_EDD_Xero {
 	}
 
 	/**
-	* When a user sets new private/public key values in Xero settings, write the values to the .pem and .cer files required for OAuth
-	* Leverages the updated option hook
-	*
-	* @since 0.1
-	*
-	* @param $option string Name of the option updated. For our purposes, we're just listening for "edd_settings"
-	* @param $old_value array The old value of edd_settings option
-	* @param $new_value array The new value of edd_settings option
-	* @return void
-	*/
-	public static function xero_write_keys ( $option, $old_value, $new_value ) {
+	 * When a user sets new private/public key values in Xero settings, write the values to the .pem and .cer files required for OAuth
+	 * Leverages the updated option hook
+	 *
+	 * @since 0.1
+	 *
+	 * @param $option string Name of the option updated. For our purposes, we're just listening for "edd_settings"
+	 * @param $old_value array The old value of edd_settings option
+	 * @param $new_value array The new value of edd_settings option
+	 * @return void
+	 */
+	public static function xero_write_keys( $option, $old_value, $new_value ) {
 
 		if( $option == 'edd_settings' ) {
 
@@ -326,12 +338,12 @@ final class Plugify_EDD_Xero {
 	}
 
 	/**
-	* AJAX mechnism for allowing Xero keys to be written without updated_option firing
-	*
-	* @since 1.2.1
-	*
-	* @return void
-	*/
+	 * AJAX mechanism for allowing Xero keys to be written without updated_option firing
+	 *
+	 * @since 1.2.1
+	 *
+	 * @return void
+	 */
 	public static function force_xero_write_keys() {
 
 		// Get EDD settings
@@ -346,17 +358,15 @@ final class Plugify_EDD_Xero {
 	}
 
 	/**
-	* Leverage the Xero invoice creation success action to save critical invoice data such as Number and ID as meta
-	* against the EDD Payment whenever an invoice is generated
-	*
-	* @since 0.1
-	*
-	* @param Xero_Invoice $invoice Xero_Invoice object of newly generated invoice
-	* @param string $invoice_number Number of Xero invoice as automatically assigned by Xero. EG, "INV-123"
-	* @param guid $invoice_id Unique ID of invoice as in Xero. EG "851b2f09-36f8-4df8-a32e-da8c4c451ff0"
-	* @param int $payment_id ID of EDD Payment
-	* @return void
-	*/
+	 * Leverage the Xero invoice creation success action to save critical invoice data such as Number and ID as meta
+	 * against the EDD Payment whenever an invoice is generated
+	 *
+	 * @since 0.1
+	 * @param $xero_payment
+	 * @param $response
+	 * @param $payment_id
+	 * @return void
+	 */
 	public function xero_payment_success( $xero_payment, $response, $payment_id ) {
 
 		// Add a success note to the payment
@@ -364,6 +374,11 @@ final class Plugify_EDD_Xero {
 
 	}
 
+	/**
+	 * @param $xero_payment
+	 * @param $response
+	 * @param $payment_id
+	 */
 	public function xero_payment_fail( $xero_payment, $response, $payment_id ) {
 
 		// Add a failure notice to the payment
@@ -372,18 +387,18 @@ final class Plugify_EDD_Xero {
 	}
 
 	/**
-	* Leverage the Xero invoice creation success action to save critical invoice data such as Number and ID as meta
-	* against the EDD Payment whenever an invoice is generated
-	*
-	* @since 0.1
-	*
-	* @param Xero_Invoice $invoice Xero_Invoice object of newly generated invoice
-	* @param string $invoice_number Number of Xero invoice as automatically assigned by Xero. EG, "INV-123"
-	* @param guid $invoice_id Unique ID of invoice as in Xero. EG "851b2f09-36f8-4df8-a32e-da8c4c451ff0"
-	* @param int $payment_id ID of EDD Payment
-	* @return void
-	*/
-	public function xero_invoice_success ( $invoice, $invoice_number, $invoice_id, $payment_id ) {
+	 * Leverage the Xero invoice creation success action to save critical invoice data such as Number and ID as meta
+	 * against the EDD Payment whenever an invoice is generated
+	 *
+	 * @since 0.1
+	 *
+	 * @param Xero_Invoice $invoice Xero_Invoice object of newly generated invoice
+	 * @param string $invoice_number Number of Xero invoice as automatically assigned by Xero. EG, "INV-123"
+	 * @param string $invoice_id Unique ID of invoice as in Xero. EG "851b2f09-36f8-4df8-a32e-da8c4c451ff0"
+	 * @param int $payment_id ID of EDD Payment
+	 * @return void
+	 */
+	public function xero_invoice_success( $invoice, $invoice_number, $invoice_id, $payment_id ) {
 
 		// Save invoice number and ID locally
 		update_post_meta( $payment_id, '_edd_payment_xero_invoice_number', $invoice_number );
@@ -403,17 +418,17 @@ final class Plugify_EDD_Xero {
 	}
 
 	/**
-	* Leverage the Xero invoice creation failure action to add an error note to the payment
-	*
-	* @since 0.1
-	*
-	* @param Xero_Invoice $invoice Xero_Invoice object of invoice which failed to generate in Xero
-	* @param int $payment_id ID of EDD Payment
-	* @param mixed $error_obj (optional) An object which was used in the context of creating a Xero invoice which subsequently failed
-	* @param string $custom_message (optional) Allow a developer to pass in the error message they want written on the EDD payment note
-	* @return void
-	*/
-	public function xero_invoice_fail ( $invoice, $payment_id, $error_obj = null, $custom_message = null ) {
+	 * Leverage the Xero invoice creation failure action to add an error note to the payment
+	 *
+	 * @since 0.1
+	 *
+	 * @param Xero_Invoice $invoice Xero_Invoice object of invoice which failed to generate in Xero
+	 * @param int $payment_id ID of EDD Payment
+	 * @param mixed $error_obj (optional) An object which was used in the context of creating a Xero invoice which subsequently failed
+	 * @param string $custom_message (optional) Allow a developer to pass in the error message they want written on the EDD payment note
+	 * @return void
+	 */
+	public function xero_invoice_fail( $invoice, $payment_id, $error_obj = null, $custom_message = null ) {
 
 		$postfix = null;
 
@@ -422,9 +437,7 @@ final class Plugify_EDD_Xero {
 			if( isset( $error_obj['response'] ) ) {
 				$postfix = $error_obj['response'];
 			}
-
 			// Allow space here for another possible $error_obj context, an Exception object, for example
-
 		}
 
 		// Insert a note on the payment informing merchant that Xero invoice generation failed, and why
@@ -435,25 +448,22 @@ final class Plugify_EDD_Xero {
 	}
 
 	/**
-	* Handler to populate the Metabox found on the EDD Payment page in the backend
-	*
-	* @since 0.1
-	*
-	* @return void
-	*/
-	public function xero_invoice_metabox () {
+	 * Handler to populate the Metabox found on the EDD Payment page in the backend
+	 *
+	 * @since 0.1
+	 *
+	 * @return void
+	 */
+	public function xero_invoice_metabox() {
 
 		$invoice_number = get_post_meta( $_GET['id'], '_edd_payment_xero_invoice_number', true );
 		$invoice_id = get_post_meta( $_GET['id'], '_edd_payment_xero_invoice_id', true );
 
 		$valid_settings = $this->settings_are_valid();
-
 		?>
-
 		<div id="edd-xero" class="postbox edd-order-data">
-
 			<h3 class="hndle">
-				<span><img src="<?php echo plugin_dir_url( __FILE__ ) . 'assets/art/xero-logo@2x.png'; ?>" width="12" height="12" style="position:relative;top:1px;" />&nbsp; Xero</span>
+				<span><img src="<?php echo plugin_dir_url( __FILE__ ) . 'assets/art/xero-logo@2x.png'; ?>" width="12" height="12" style="position:relative;top:1px;" />&nbsp; <?php _e('Xero','edd-xero'); ?></span>
 			</h3>
 			<div class="inside">
 				<div class="edd-admin-box">
@@ -491,7 +501,6 @@ final class Plugify_EDD_Xero {
 					</div>
 				</div>
 			</div>
-
 			<?php if( $valid_settings ): ?>
 			<div class="edd-order-update-box edd-admin-box edd-invoice-actions">
 		    <div class="major-publishing-actions">
@@ -503,20 +512,18 @@ final class Plugify_EDD_Xero {
 				</div>
 			</div>
 			<?php endif; ?>
-
 		</div>
-
 		<?php
 	}
 
 	/**
-	* AJAX handler to do an invoice lookup. Uses parameter "invoice_number"
-	*
-	* @since 0.1
-	*
-	* @return HTTP
-	*/
-	public function ajax_xero_invoice_lookup () {
+	 * AJAX handler to do an invoice lookup. Uses parameter "invoice_number"
+	 *
+	 * @since 0.1
+	 *
+	 * @return void
+	 */
+	public function ajax_xero_invoice_lookup() {
 
 		if( !isset( $_REQUEST['invoice_number'] ) ) {
 			wp_send_json_error();
@@ -534,12 +541,12 @@ final class Plugify_EDD_Xero {
 	}
 
 	/**
-	* AJAX handler to generate an invoice in Xero. Uses parameter "payment_id" which represents the EDD Payment
-	*
-	* @since 0.1
-	*
-	* @return HTTP
-	*/
+	 * AJAX handler to generate an invoice in Xero. Uses parameter "payment_id" which represents the EDD Payment
+	 *
+	 * @since 0.1
+	 *
+	 * @return void
+	 */
 	public function ajax_generate_invoice () {
 
 		if( !isset( $_REQUEST['payment_id'] ) ) {
@@ -559,12 +566,12 @@ final class Plugify_EDD_Xero {
 	}
 
 	/**
-	* AJAX handler to disassociate the invoice attached to a payment. Uses parameter "payment_id" which represents the EDD Payment
-	*
-	* @since 0.1
-	*
-	* @return HTTP
-	*/
+	 * AJAX handler to disassociate the invoice attached to a payment. Uses parameter "payment_id" which represents the EDD Payment
+	 *
+	 * @since 0.1
+	 *
+	 * @return void
+	 */
 	public function ajax_disassociate_invoice () {
 
 		if( !isset( $_REQUEST['payment_id'] ) ) {
@@ -584,13 +591,13 @@ final class Plugify_EDD_Xero {
 	}
 
 	/**
-	* Generate an array containing a snapshot of a Xero invoice
-	*
-	* @since 0.1
-	*
-	* @param $response SimpleXMLObject An XML response for a particular invoice from Xero
-	* @return array
-	*/
+	 * Generate an array containing a snapshot of a Xero invoice
+	 *
+	 * @since 0.1
+	 *
+	 * @param $response SimpleXMLObject An XML response for a particular invoice from Xero
+	 * @return array
+	 */
 	public function get_invoice_excerpt( $response ) {
 
 		$return = array();
@@ -612,15 +619,15 @@ final class Plugify_EDD_Xero {
 	}
 
 	/**
-	* Apply a payment to a Xero invoice
-	*
-	* @since 1.0
-	*
-	* @param string $invoice_id ID of Xero invoice. NOT the number, looks like an MD5 hash, not the "pretty" ID
-	* @param int $payment_id EDD payment ID this payment will be mirroring
-	* @return void
-	*/
-	public function create_payment ( $invoice_id, $payment_id ) {
+	 * Apply a payment to a Xero invoice
+	 *
+	 * @since 1.0
+	 *
+	 * @param string $invoice_id ID of Xero invoice. NOT the number, looks like an MD5 hash, not the "pretty" ID
+	 * @param int $payment_id EDD payment ID this payment will be mirroring
+	 * @return void
+	 */
+	public function create_payment( $invoice_id, $payment_id ) {
 
 		// Get EDD payment again so we can grab the correct amount
 		if( $payment = edd_get_payment_meta( $payment_id ) ) {
@@ -674,7 +681,7 @@ final class Plugify_EDD_Xero {
 	 *
 	 * @return bool|string
 	 */
-	private function put_payment ( $xero_payment, $payment_id ) {
+	private function put_payment( $xero_payment, $payment_id ) {
 
 		// Abort if a Xero_Invoice object was not passed
 		if( !( $xero_payment instanceof Xero_Payment ) )
@@ -716,15 +723,15 @@ final class Plugify_EDD_Xero {
 	}
 
 	/**
-	* Handler for edd_complete_purchase hook. Fires when a purchase is completed
-	* Generates a Xero_Invoice object and then sends that object to the Xero API as XML for creation
-	*
-	* @since 0.1
-	*
-	* @param int $payment_id ID of EDD payment on which to base the Xero invoice.
-	* @return void
-	*/
-	public function create_invoice ( $payment_id ) {
+	 * Handler for edd_complete_purchase hook. Fires when a purchase is completed
+	 * Generates a Xero_Invoice object and then sends that object to the Xero API as XML for creation
+	 *
+	 * @since 0.1
+	 *
+	 * @param int $payment_id ID of EDD payment on which to base the Xero invoice.
+	 * @return void
+	 */
+	public function create_invoice( $payment_id ) {
 
 		// Prepare required data such as customer details and cart contents
 		$payment = edd_get_payment_meta( $payment_id );
@@ -849,15 +856,15 @@ final class Plugify_EDD_Xero {
 	}
 
 	/**
-	* Handler for sending an invoice creation request to Xero once all processing has been completed.
-	*
-	* @since 0.1
-	*
-	* @param Xero_Invoice $invoice Xero_Invoice object which the new invoice will be generated from
-	* @param int $payment_id ID of EDD payment on which to base the Xero invoice.
-	* @return SimpleXMLObject
-	*/
-	private function put_invoice ( $invoice, $payment_id ) {
+	 * Handler for sending an invoice creation request to Xero once all processing has been completed.
+	 *
+	 * @since 0.1
+	 *
+	 * @param Xero_Invoice $invoice Xero_Invoice object which the new invoice will be generated from
+	 * @param int $payment_id ID of EDD payment on which to base the Xero invoice.
+	 * @return SimpleXMLObject
+	 */
+	private function put_invoice( $invoice, $payment_id ) {
 
 		// Abort if a Xero_Invoice object was not passed
 		if( !( $invoice instanceof Xero_Invoice ) )
@@ -899,14 +906,14 @@ final class Plugify_EDD_Xero {
 	}
 
 	/**
-	* Query the Xero API for a specific invoice by number (as opposed to the ID)
-	*
-	* @since 0.1
-	*
-	* @param int $invoice_number Automatically generated human friendly invoice number. EG "INV-123"
-	* @return string|bool
-	*/
-	private function get_invoice ( $invoice_number ) {
+	 * Query the Xero API for a specific invoice by number (as opposed to the ID)
+	 *
+	 * @since 0.1
+	 *
+	 * @param int $invoice_number Automatically generated human friendly invoice number. EG "INV-123"
+	 * @return string|bool
+	 */
+	private function get_invoice( $invoice_number ) {
 
 		try {
 
@@ -932,13 +939,13 @@ final class Plugify_EDD_Xero {
 	}
 
 	/**
-	* Private helper function to check whether Xero settings exist
-	*
-	* @since 0.1
-	*
-	* @return bool Returns true if valid data is configured, false if any fields are missing
-	*/
-	private function settings_are_valid () {
+	 * Private helper function to check whether Xero settings exist
+	 *
+	 * @since 0.1
+	 *
+	 * @return bool Returns true if valid data is configured, false if any fields are missing
+	 */
+	private function settings_are_valid() {
 
 		$valid = true;
 
@@ -967,13 +974,13 @@ final class Plugify_EDD_Xero {
 	}
 
 	/**
-	* Private helper function to load oauth lib when a request is about to be made to Xero
-	*
-	* @since 0.8
-	*
-	* @return void
-	*/
-	private function load_oauth_lib () {
+	 * Private helper function to load oauth lib when a request is about to be made to Xero
+	 *
+	 * @since 0.8
+	 *
+	 * @return void
+	 */
+	private function load_oauth_lib() {
 
 		// Don't load twice
 		if( class_exists( 'XeroOAuth' ) ) {
@@ -1048,7 +1055,10 @@ final class Plugify_EDD_Xero {
 */
 if( !function_exists( 'edd_description_callback' ) ) {
 
-	function edd_description_callback () {
+	/**
+	 *
+	 */
+	function edd_description_callback() {
 
 		?>
 
@@ -1065,7 +1075,7 @@ if( !function_exists( 'edd_description_callback' ) ) {
 			<li><?php _e( 'Click Save Changes', 'edd-xero' ); ?></li>
 		</ol>
 
-		<button class="button primary" id="xero-rewrite-credentials">Force rewrite of certificate files</button>
+		<button class="button primary" id="xero-rewrite-credentials"><?php _e( 'Force rewrite of certificate files', 'edd-xero' ); ?></button>
 
 		<script type="text/javascript">
 
