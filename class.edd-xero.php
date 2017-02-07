@@ -1068,7 +1068,7 @@ if( !function_exists( 'edd_description_callback' ) ) {
 			<li><?php echo sprintf( '%s <a href="https://api.xero.com/Application/List" target="_blank">My Applications</a> tab', __( 'Navigate to the', 'edd-xero' ), __( 'tab', 'edd-xero' ) ); ?></li>
 			<li><?php _e(' Click "Add Application"', 'edd-xero' ); ?></li>
 			<li><?php _e( 'You should see an option for creating a Public or Private application.', 'edd-xero' ); ?> <strong><?php _e( 'Choose Private', 'edd-xero' ); ?></strong></li>
-			<li><?php _e( 'The next step is a bit tricky', 'edd-xero' ); ?>. <a href="http://developer.xero.com/documentation/getting-started/private-applications/" target="_blank"><?php _e( "Please follow Xero's documentation here on creating a Private Xero Application", 'edd-xero' ); ?></a></li>
+			<li><?php _e( 'The next step is a bit tricky', 'edd-xero' ); ?>. <a href="https://developer.xero.com/documentation/auth-and-limits/private-applications" target="_blank"><?php _e( "Please follow Xero's documentation here on creating a Private Xero Application", 'edd-xero' ); ?></a></li>
 			<li><?php _e( 'When you have created the application, copy and paste your Consumer Key and Consumer Secret in to the fields below', 'edd-xero' ); ?></li>
 			<li><?php _e( 'After you have pasted in your Consumer Key and Consumer Secret, open your privatekey.pen and publickey.cer files and paste their contents in to the respective fields below', 'edd-xero' ); ?></li>
 			<li><?php _e( 'Click Save Changes', 'edd-xero' ); ?></li>
