@@ -1042,7 +1042,6 @@ final class Plugify_EDD_Xero {
 
 	}
 
-
 }
 
 /**
