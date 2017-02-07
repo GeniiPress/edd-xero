@@ -183,7 +183,7 @@ final class Plugify_EDD_Xero {
 	}
 
 	public function edd_xero_settings_section( $sections ) {
-		$sections['edd-xero-settings'] = __( 'Xero', 'edd-xero');
+		$sections['xero-settings'] = __( 'Xero', 'edd-xero');
 		return $sections;
 	}
 	/**
@@ -194,15 +194,15 @@ final class Plugify_EDD_Xero {
 	*
 	* @return array $edd_settings
 	*/
-	public static function edd_xero_register_settings ( $edd_settings ) {
+	public static function edd_xero_register_settings ( $settings ) {
 
-		$settings = array(
-			'xero_settings_behaviour' => array(
+		$xero_settings = array(
+			array(
 				'id' => 'xero_settings_behaviour',
 				'name' => __( 'Xero behaviour', 'edd-xero' ),
 				'type' => 'header'
 			),
-			'invoice_status' => array(
+			array(
 				'id' => 'invoice_status',
 				'name' => __( 'Invoice Status', 'edd-xero' ),
 				'type' => 'select',
@@ -287,10 +287,10 @@ final class Plugify_EDD_Xero {
 
 		// If EDD is at version 2.5 or later use a subsection
 		if ( version_compare( EDD_VERSION, 2.5, '>=' ) ) {
-			$settings = array( 'edd-xero-settings' => $settings );
+			$xero_settings = array( 'xero-settings' => $xero_settings );
 		}
 
-		return array_merge( $edd_settings, $settings );
+		return array_merge( $settings, $xero_settings );
 
 	}
 
@@ -461,11 +461,11 @@ final class Plugify_EDD_Xero {
 
 						<?php if( !$valid_settings ): ?>
 
-							<h3 class="invoice-number">Xero settings not configured</h3>
+							<h3 class="invoice-number"><?php _e('Xero settings not configured','edd-xero'); ?></h3>
 
 							<p>
 								<?php _e( 'Looks like you need to configure your Xero settings!', 'edd-xero' ); ?>
-								<?php _e( 'You can <a href="' . admin_url('edit.php?post_type=download&page=edd-settings&tab=extensions') . '">click here</a> to do so', 'edd-xero' ); ?>
+								<?php _e( 'You can <a href="' . admin_url('edit.php?post_type=download&page=edd-settings&tab=extensions&section=xero-settings') . '">click here</a> to do so', 'edd-xero' ); ?>
 							</p>
 
 						<?php else: ?>
