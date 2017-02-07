@@ -59,7 +59,8 @@ final class Plugify_EDD_Xero {
 		// Write certificate key files when user updates textarea fields
 		add_action( 'updated_option', array( $this, 'xero_write_keys' ), 10, 3 );
 
-		// EDD filters which need to be leveraged
+		// Setup EDD Settings Section and add our settings to it
+		add_filter( 'edd_settings_sections_extensions', array( $this, 'edd_xero_settings_section') );
 		add_filter( 'edd_settings_extensions', array( $this, 'edd_xero_register_settings' ), 10, 1 );
 
 	}
@@ -181,13 +182,17 @@ final class Plugify_EDD_Xero {
 
 	}
 
+	public function edd_xero_settings_section( $sections ) {
+		$sections['edd-xero-settings'] = __( 'Xero', 'edd-xero');
+		return $sections;
+	}
 	/**
 	* Register settings fields where the user can insert the consumer key, consumer secret etc..
 	* Currently displays under the Extensions tab in EDD settings
 	*
 	* @since 0.1
 	*
-	* @return void
+	* @return array $edd_settings
 	*/
 	public static function edd_xero_register_settings ( $edd_settings ) {
 
@@ -279,6 +284,11 @@ final class Plugify_EDD_Xero {
 				'type' => 'checkbox'
 			)
 		);
+
+		// If EDD is at version 2.5 or later use a subsection
+		if ( version_compare( EDD_VERSION, 2.5, '>=' ) ) {
+			$settings = array( 'edd-xero-settings' => $settings );
+		}
 
 		return array_merge( $edd_settings, $settings );
 

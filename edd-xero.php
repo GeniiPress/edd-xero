@@ -2,10 +2,11 @@
 /**
  * Plugin Name: Easy Digital Downloads - Xero
  * Plugin URI: https://shopplugins.com
- * Description: Integrate your Easy Digital Downloads store with your Xero account
+ * Description: Integrate Easy Digital Downloads with the Xero accounting system
  * Author: Daniel Espinoza
  * Version: 1.2.8
  * Author URI: https://shopplugins.com
+ * Text Domain: edd-xero
  */
 
 // Ensure WordPress has been bootstrapped
