@@ -638,9 +638,6 @@ final class Plugify_EDD_Xero {
 			$fees       = edd_get_payment_fees( $payment_id );
 			$fee_total  = 0.00;
 			foreach( $fees as $fee ){
-				if ( $fee['amount'] <= 0 ) {
-					continue;
-				}
 				$fee_total += $fee['amount'];
 			}
 			$total		= $subtotal + $tax + $fee_total;
