@@ -28,19 +28,25 @@
 	background: none repeat scroll 0% 0% #F5F5F5;
 }
 
-	#edd-xero .major-publishing-actions .publishing-action {
-		text-align: right;
-		float: right;
-		line-height: 23px;
-	}
+#edd-xero .major-publishing-actions .publishing-action {
+    text-align: right;
+    float: right;
+    line-height: 23px;
+}
 
-		#edd-xero .major-publishing-actions .publishing-action .button-primary {
+#edd-xero .major-publishing-actions .publishing-action .button-primary {
 
-		}
+}
 
-		#edd-xero .major-publishing-actions .publishing-action .button-secondary {
-			margin-right: 10px;
-		}
+#edd-xero .major-publishing-actions .publishing-action .button-secondary {
+    margin-right: 10px;
+}
+
+#edd-xero .major-publishing-actions .publishing-action .button {
+	clear: both;
+    float: left;
+    margin-top: 10px;
+}
 
 #edd-xero .edd-invoice-actions {
 	display: none;

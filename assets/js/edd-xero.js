@@ -172,4 +172,50 @@ jQuery(document).ready( function($) {
 
 	});
 
+	// Send Payment button handler
+	$('#edd-xero-generate-payment').on('click', function(e) {
+
+		var button = $(this);
+
+		// Halt browser
+		e.preventDefault();
+
+		// Make sure the user wants to do this
+		if( confirm( 'Are you sure you want to send payment for this invoice to Xero?' ) ) {
+
+			$.ajax({
+				url: ajaxurl,
+				type: 'POST',
+				dataType: 'json',
+				data: {
+					action: 'generate_payment',
+					payment_id: payment_id
+				},
+				beforeSend: function() {
+					button.text('Loading...');
+				},
+				success: function(result) {
+
+					if(result.success) {
+						$('#edd_xero_invoice_details, #edd-xero .edd-invoice-actions').fadeOut(200, function() {
+							$('#edd-xero h3.invoice-number').text('Payment Sent').addClass('text-center');
+						});
+					}
+					else {
+						button.text('Disassociate Invoice');
+						alert('There was a problem sending the payment. Please check Payment Notes and try again.');
+					}
+
+					button.remove();
+
+				},
+				error: function() {
+					button.text('Disassociate Invoice');
+					alert('There was a problem sending the payment. Please check Payment Notes and try again.');
+				}
+			});
+
+		}
+
+	});
 });

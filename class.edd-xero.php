@@ -86,6 +86,7 @@ final class Plugify_EDD_Xero {
 		add_action( 'wp_ajax_invoice_lookup', array( $this, 'ajax_xero_invoice_lookup' ) );
 		add_action( 'wp_ajax_generate_invoice', array( $this, 'ajax_generate_invoice' ) );
 		add_action( 'wp_ajax_disassociate_invoice', array( $this, 'ajax_disassociate_invoice' ) );
+		add_action( 'wp_ajax_generate_payment', array( $this, 'ajax_generate_payment' ) );
 
 	}
 
@@ -369,6 +370,10 @@ final class Plugify_EDD_Xero {
 	 */
 	public function xero_payment_success( $xero_payment, $response, $payment_id ) {
 
+		// Save payment ID locally
+		$xero_payment_id = (string)$response->Payments->Payment->PaymentID;
+		update_post_meta( $payment_id, '_edd_payment_xero_payment_id', $xero_payment_id );
+
 		// Add a success note to the payment
 		edd_insert_payment_note( $payment_id, __( 'Payment was successfully applied to Xero invoice', 'edd-xero' ) );
 
@@ -458,6 +463,7 @@ final class Plugify_EDD_Xero {
 
 		$invoice_number = get_post_meta( $_GET['id'], '_edd_payment_xero_invoice_number', true );
 		$invoice_id = get_post_meta( $_GET['id'], '_edd_payment_xero_invoice_id', true );
+		$xero_payment_id = get_post_meta( $_GET['id'], '_edd_payment_xero_payment_id', true );
 
 		$valid_settings = $this->settings_are_valid();
 		?>
@@ -507,6 +513,9 @@ final class Plugify_EDD_Xero {
 					<div class="publishing-action">
 						<a id="edd-view-invoice-in-xero" class="button-primary right" target="_blank" href="https://go.xero.com/AccountsReceivable/Edit.aspx?InvoiceID=<?php echo $invoice_id; ?>"><?php _e( 'View in Xero', 'edd-xero' ); ?></a>
 						<a id="edd-xero-disassociate-invoice" class="button-secondary right" href="#"><?php _e( 'Disassociate Invoice', 'edd-xero' ); ?></a>
+						<?php if( $invoice_id && empty($xero_payment_id) ){ ?>
+						<a id="edd-xero-generate-payment" class="button" href="#"><?php _e( 'Send Payment', 'edd-xero' ); ?></a>
+						<?php } ?>
 					</div>
 					<div class="clear"></div>
 				</div>
@@ -595,7 +604,7 @@ final class Plugify_EDD_Xero {
 	 *
 	 * @since 0.1
 	 *
-	 * @param $response SimpleXMLObject An XML response for a particular invoice from Xero
+	 * @param $response SimpleXMLElement An XML response for a particular invoice from Xero
 	 * @return array
 	 */
 	public function get_invoice_excerpt( $response ) {
@@ -604,7 +613,7 @@ final class Plugify_EDD_Xero {
 
 		foreach( $response->Invoices as $invoice_tag ) {
 			$return['ID'] = (string)$invoice_tag->Invoice->InvoiceID;
-			$return['InvoiceNumber'] = (String)$invoice_tag->Invoice->InvoiceNumber;
+			$return['InvoiceNumber'] = (string)$invoice_tag->Invoice->InvoiceNumber;
 			$return['CurrencyCode'] = (string)$invoice_tag->Invoice->CurrencyCode;
 			$return['Total'] = (string)$invoice_tag->Invoice->Total;
 			$return['TotalTax'] = (string)$invoice_tag->Invoice->TotalTax;
@@ -619,13 +628,46 @@ final class Plugify_EDD_Xero {
 	}
 
 	/**
+	 * AJAX handler to send a payment to Xero for invoice.
+	 *
+	 * @since 12.10
+	 *
+	 * @return void
+	 */
+	public function ajax_generate_payment () {
+
+		if( !isset( $_REQUEST['payment_id'] ) ) {
+			wp_send_json_error();
+		}
+
+		// get Xero Payment ID
+		$invoice_id = get_post_meta( $_REQUEST['payment_id'], '_edd_payment_xero_invoice_id', true );
+		if( empty( $invoice_id ) ){
+			wp_send_json_error( array(
+				'error_message' => __( 'This payment does not have an invoice recorded in Xero.', 'edd-xero' )
+			) );
+		}
+
+		if( $response = $this->create_payment( $invoice_id, $_REQUEST['payment_id'] ) ) {
+			$return = 'SUCCESS';
+			wp_send_json_success( $return );
+		}
+		else {
+			wp_send_json_error( array(
+				'error_message' => __( 'Xero invoice could not be created. Please refresh the page and check Payment Notes.', 'edd-xero' )
+			) );
+		}
+
+	}
+
+	/**
 	 * Apply a payment to a Xero invoice
 	 *
 	 * @since 1.0
 	 *
 	 * @param string $invoice_id ID of Xero invoice. NOT the number, looks like an MD5 hash, not the "pretty" ID
 	 * @param int $payment_id EDD payment ID this payment will be mirroring
-	 * @return void
+	 * @return SimpleXMLElement
 	 */
 	public function create_payment( $invoice_id, $payment_id ) {
 
@@ -676,7 +718,7 @@ final class Plugify_EDD_Xero {
 	 * @param $xero_payment
 	 * @param $payment_id
 	 *
-	 * @return bool|string
+	 * @return SimpleXMLElement
 	 */
 	private function put_payment( $xero_payment, $payment_id ) {
 
