@@ -46,6 +46,8 @@ class Xero_Line_Item extends Xero_Resource {
 	*/
 	public function get_xml () {
 
+		$_per_unit = $this->_unitamount / $this->_quantity;
+
 		// Initialize XML array
 		$_ = array();
 
@@ -59,7 +61,7 @@ class Xero_Line_Item extends Xero_Resource {
 		$_[] = '<Quantity>' . $this->_quantity . '</Quantity>';
 
 		// Unit amount (price)
-		$_[] = '<UnitAmount>' . $this->_unitamount . '</UnitAmount>';
+		$_[] = '<UnitAmount>' . $_per_unit . '</UnitAmount>';
 
 		// Unit tax
 		$_[] = '<TaxAmount>' . $this->_tax . '</TaxAmount>';
