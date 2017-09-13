@@ -842,7 +842,7 @@ final class Plugify_EDD_Xero {
 				$invoice->add( new Xero_Line_Item( array(
 					'description' => $line_item['name'],
 					'quantity' => $line_item['quantity'],
-					'unitamount' => $line_item['price'],
+					'unitamount' => $line_item['subtotal'],
 					'tax' => $line_item['tax'],
 					'total' => $line_item['price'],
 					'accountcode' => $settings['sales_account']
@@ -963,10 +963,15 @@ final class Plugify_EDD_Xero {
 			$XeroOAuth = new XeroOAuth( $this->xero_config );
 
 			$request = $XeroOAuth->request( 'GET', $XeroOAuth->url( 'Invoices/' . $invoice_number, 'core' ), array(), NULL );
-			$response = $XeroOAuth->parseResponse( $request['response'] ,'xml' );
+			if ( '400' == $request['code'] ) {
+				$this->log( "get_invoice Invoice Number  " . $invoice_number );
+				$this->log( "get_invoice Response  " . $request['response'] );
 
-			$this->log( "get_invoice Invoice Number  " . $invoice_number );
-			$this->log( "get_invoice Response  " . print_r( $response, true ) );
+			} else {
+				$response = $XeroOAuth->parseResponse( $request['response'] ,'xml' );
+				$this->log( "get_invoice Invoice Number  " . $invoice_number );
+				$this->log( "get_invoice Response  " . print_r( $response, true ) );
+			}
 
 			return $response;
 

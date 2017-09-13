@@ -1,7 +1,10 @@
 *** EDD Xero ***
 
-2017-04-24 Version 1.2.10
-* Fix for line items with more than 1 qty and a line item discont
+2017-07-20 Version 1.2.10
+* Fix for line items with more than 1 qty and a line item discount
+* Fix for PHP7 compatibility
+* Fixed compatibility with EDD Recurring
+* Fix for Exclusive Tax being sent when already
 
 2017-02-20 Version 1.2.9
 * Moved Xero settings to a subsection of Extensions.
