@@ -44,6 +44,9 @@ final class Plugify_EDD_Xero {
 		// Hook in to created payments
 		add_action( 'edd_complete_purchase', array( $this, 'create_invoice' ) );
 
+		// Hook in to created subscription renwal payments
+		add_action( 'edd_recurring_add_subscription_payment', array( $this, 'create_recurring_invoice' ), 20, 2 );
+
 		// Setup actions for invoice creation success/fail
 		add_action( 'edd_xero_invoice_creation_success', array( $this, 'xero_invoice_success' ), 99, 4 );
 		add_action( 'edd_xero_invoice_creation_fail', array( $this, 'xero_invoice_fail' ), 10, 4 );
@@ -758,6 +761,18 @@ final class Plugify_EDD_Xero {
 		catch( Exception $e ) {
 			do_action( 'edd_xero_payment_fail', $xero_payment, $response, $e );
 		}
+
+	}
+
+
+	/**
+	 * Create an invoice when a subscription renewal payment is created.
+	 *
+	 * @param $payment
+	 * @param $subscription
+	 */
+	public function create_recurring_invoice( $payment, $subscription ) {
+		$this->create_invoice( $payment->ID );
 
 	}
 
