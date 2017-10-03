@@ -239,10 +239,11 @@ final class Plugify_EDD_Xero {
 				'id' => 'line_amount_type',
 				'name' => __( 'Line Amount Type', 'edd-xero' ),
 				'type' => 'select',
-				'desc' => __( 'Send invoice line item amount as inclusive or exclusive of tax', 'edd-xero' ),
+				'desc' => __( 'Send invoice line item amount as Exclusive, Inclusive or No Tax', 'edd-xero' ),
 				'options' => array(
 					'Exclusive' => 'Exclusive',
-					'Inclusive' => 'Inclusive'
+					'Inclusive' => 'Inclusive',
+					'NoTax' => 'No Tax'
 				)
 			),
 			'sales_account' => array(
